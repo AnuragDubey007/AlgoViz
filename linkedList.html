@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linked List</title>
+    <link rel="stylesheet" href="styles/nav.css">
+    <link rel="stylesheet" href="styles/body.css">
+    <link rel="stylesheet" href="styles/general.css">
+    <link rel="stylesheet" href="styles/Modules/linkedList.css">
+    <link rel="stylesheet" href="styles/footer.css">
+</head>
+<body>
+     <div id="navbar"></div>
+    <main>
+        <!-- Header-sectiom -->
+    <div id="pageheading"></div>
+
+    <!-- Control-Panel -->
+     <section class="control-panel">
+        <div class="control-header">
+            <h2 class="control-title">Controls</h2>
+            <button class="control-toggle">−</button>
+        </div>
+        <div class="control-content">
+            <!-- Input-section -->
+            <div class="control-section inputvalue">
+                <h3 class="control-section-title">INPUT VALUES</h3>
+                <div class="input-group">
+                    <div class="input-wrapper">
+                        <label for="node-value" class="control-label" value="0" min="0" max="999">Node Value</label>
+                        <input type="number" class="control-input" value="0" min="0" max="999">
+                    </div>
+                    <div class="input-wrapper">
+                        <label for="node-position" class="control-label" value="0" min="0" max="999">Position</label>
+                        <input type="number" class="control-input" value="0" min="0" max="999">
+                    </div>
+                </div>
+            </div>
+            <!-- Add operation -->
+            <div class="control-section">
+                <h3 class="control-section-title">ADD OPERATION</h3>
+                <div class="control-btn-group">
+                        <button class="control-btn">Add At Head</button>
+                        <button class="control-btn">Add At Tail</button>
+                        <button class="control-btn">Add At Position</button>
+                </div>
+            </div>
+            <!-- Remove operation -->
+             <div class="control-section">
+                <h3 class="control-section-title">Remove Operation</h3>
+                <div class="control-btn-group">
+                        <button class="control-btn secondary">Remove Head</button>
+                        <button class="control-btn secondary">Remove Tail</button>
+                        <button class="control-btn secondary">Remove At Position </button>
+                </div>
+            </div>
+            <!-- other operation -->
+             <div class="control-section">
+                <h3 class="control-section-title">Other Operations</h3>
+                <div class="control-btn-group">
+                        <button class="control-btn secondary">Search</button>
+                        <button class="control-btn danger">Clear All</button>
+                        
+                </div>
+            </div>
+        </div>
+     </section>
+
+     <!-- Visualization Area -->
+      <section class="visualization-area">
+        <div class="visualization-header">
+            <h2 class="visualization-title">Linked List Visualization</h2>
+            <div class="visualization-stats">
+                <div class="stat-item">
+                    <div class="stat-value">0</div>
+                    <div class="stat-label">Size</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">-</div>
+                    <div class="stat-label">HEAD</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">-</div>
+                    <div class="stat-label">TAIL</div>
+                </div>
+            </div>
+        </div>
+        <div class="linked-list-container">
+            <div class="linked-list">
+                <div class="node">
+                    <!-- head current highlight and all class as we needed,also either -->
+                    <div class="node-content head current highlight tail">0</div>
+                    <div class="node-pointer"></div>
+                    <div class="node-null">NULL</div>
+                    <div class="node-label">Empty List</div>
+                </div>
+            </div>
+        </div>
+      </section>
+    </main>
+    <div id="footer"></div>
+    <script type="module" src="scripts/Modules/linkedList.js"></script>
+</body>
+</html>

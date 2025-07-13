@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sorting</title>
+    <link rel="stylesheet" href="styles/nav.css">
+    <link rel="stylesheet" href="styles/body.css">
+    <link rel="stylesheet" href="styles/general.css">
+    <link rel="stylesheet" href="styles/Modules/sorting.css">
+    <link rel="stylesheet" href="styles/footer.css">
+</head>
+<body>
+     <div id="navbar"></div>
+    <main>
+        <!-- Header-sectiom -->
+    <div id="pageheading"></div>
+
+    <!-- Control-Panel -->
+     <section class="control-section">
+        <div class="control-header">
+            <h2 class="control-title">Controls</h2>
+            <div id="status-indicator" class="status-indicator idle">
+                <div class="dot"></div>
+                <span id="status-text">Idle</span>
+            </div>
+        </div>
+        <div class="control-body">
+            <div class="controls">
+                
+                <div class="control-group">
+                    <label class="control-label">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 20h9"></path>
+                            <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                        </svg>
+                        Algorithm Selection</label>
+                    <div class="select-wrapper">
+                        <select name="Hello" id="algorithm1" class="select">
+                            <option value="bubble">Bubble Sort</option>
+                            <option value="selection">Selection Sort</option>
+                            <option value="insertion">Insertion Sort</option>
+                            <option value="merge">Merge Sort</option>
+                            <option value="quick">Quick Sort</option>
+                            <option value="heap">Heap Sort</option>
+                        </select>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" name="Hello" id="compare-mode" class="checkbox">
+                        <label for="compare-mode" class="checkbox-label">
+                            Compare with another algorithm</label>
+                    </div>
+                    <div class="second-algorithm-container">
+                        <select name="Hello" id="algorithm2" class="select">
+                            <option value="bubble">Bubble Sort</option>
+                            <option value="selection">Selection Sort</option>
+                            <option value="insertion">Insertion Sort</option>
+                            <option value="merge">Merge Sort</option>
+                            <option value="quick">Quick Sort</option>
+                            <option value="heap">Heap Sort</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="8" y1="12" x2="16" y2="12"></line>
+                            <line x1="12" y1="8" x2="12" y2="16"></line>
+                            </svg>
+                        Array Size</label>
+                    <div class="range-slider">
+                        <div class="range-header">
+                            <span class="range-slider-text">Size</span>
+                            <span id="size-value" class="range-value">150</span>
+                        </div>
+                        <input type="range" name="Hello" id="size" class="range" min="10" max="600" value="50">
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
+                        </svg>
+                        Visualization Speed</label>
+                    <div class="range-slider">
+                        <div class="range-header">
+                            <span class="range-slider-text">Speed</span>
+                            <span id="speed-value" class="range-value">100</span>
+                        </div>
+                        <input type="range" name="Hello" id="speed" class="range" min="1" max="100" value="50">
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                        </svg>
+                        Actions</label>
+                    <div class="btn-group">
+                        <button id="generate" class="btn">
+                            Generate New Array</button>
+                    </div>
+                    <div class="btn-group">
+                        <button id="sort" class="btn btn-outline">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                            </svg>
+                            Sort</button>
+                        <button id="pause" class="btn btn-warning" disabled>
+                            <svg class="pause-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="6" y="4" width="4" height="16"></rect>
+                                <rect x="14" y="4" width="4" height="16"></rect>
+                            </svg>
+                            <svg class="play-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+                                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                            </svg>
+                            <span class="btn-text">Pause</span></button>
+                        <button id="reset" class="btn btn-danger" disabled>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M3 2v6h6"></path>
+                                <path d="M21 12A9 9 0 0 0 6 5.3L3 8"></path>
+                                <path d="M21 22v-6h-6"></path>
+                                <path d="M3 12a9 9 0 0 0 15 6.7l3-2.7"></path>
+                            </svg>
+                            Reset</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+     </section>
+    <section class="visualization-section">
+        <div class="visualization-header">
+            <h2 class="visualization-title">Bubble Sort</h2>
+        </div>
+        <div class="visualization-body">
+            <div class="visualization-container">
+                <div class="single-view">
+                    <div class="visualization">
+                        <!-- <div class="bar"></div> -->
+                    </div>
+                </div>
+                <div class="compare-view">
+                    <div class="algo-view">
+                        <h3 class="visualization-title add-space-down">Bubble Sort</h3>
+                        <div class="visualization">
+                            <div class="bar"></div>
+                        </div>
+                    </div>
+                    <div class="algo-view">
+                        <h3 class="visualization-title add-space-down">Merge Sort</h3>
+                        <div class="visualization">
+                            <div class="bar"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color default"></div>
+                    <span>Unsorted</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color comparing"></div>
+                    <span>Comparing</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color swapping"></div>
+                    <span>Swapping</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color sorted"></div>
+                    <span>Sorted</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color pivot"></div>
+                    <span>Pivot</span>
+                </div>
+            </div>
+            <div id="single-status" class="stats">
+                <div class="stat">
+                    <div class="stat-value">0</div>
+                    <div class="stat-label">Comparisons (1)</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">0</div>
+                    <div class="stat-label">Swaps (1)</div>
+                </div>
+            </div>
+            <div id="comparison-status" class="stats">
+                <div class="stat">
+                    <div class="stat-value">0</div>
+                    <div class="stat-label">Comparisons (1)</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">0</div>
+                    <div class="stat-label">Swaps (1)</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">0</div>
+                    <div class="stat-label">Comparisons (2)</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">0</div>
+                    <div class="stat-label">Swaps (2)</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    </main>
+
+    <div id="footer"></div>
+    <script type="module" src="scripts/Modules/sorting.js"></script>
+</body>
+</html>

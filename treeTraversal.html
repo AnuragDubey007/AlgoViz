@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tree Visualizer</title>
+    <link rel="stylesheet" href="styles/nav.css">
+    <link rel="stylesheet" href="styles/body.css">
+    <link rel="stylesheet" href="styles/general.css">
+    <link rel="stylesheet" href="styles/Modules/treeTraversal.css">
+    <link rel="stylesheet" href="styles/footer.css">
+</head>
+<body>
+     <div id="navbar"></div>
+    <main>
+        <!-- Header-sectiom -->
+    <div id="pageheading"></div>
+
+    <!-- Control-Panel -->
+     <section class="control-section">
+            <div class="control-header">
+                <h2 class="control-title">Controls</h2>
+                <!-- <button class="control-toggle">−</button> -->
+            </div>
+            <div class="control-body">
+                  <!-- Row 1: Traversal Algo & Speed -->
+                <div class="control-row-1">
+                    <div class="control-group">
+                        <!-- <div class="control-card"></div> -->
+                        <h3 class="sub-heading">Select Traversal Algorithm</h3>
+                        <div class="buttons">
+                            <button id="in-order" class="traversal-button">In-order</button>
+                            <button id="pre-order" class="traversal-button">Pre-order</button>
+                            <button id="post-order" class="traversal-button">Post-order</button>
+                            <button id="level-order" class="traversal-button">Level-order</button>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <h3 class="sub-heading">Tree Type</h3>
+                        <div class="buttons">
+                            <button id="binary-tree" class="traversal-button">Binary Tree</button>
+                            <button id="binary-search-tree" class="traversal-button">Binary Search Tree</button>
+                            <button id="AVL-tree" class="traversal-button">AVL Tree</button>
+                            <button id="complete-binary-tree" class="traversal-button">Complete Binary Tree</button>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <h3 class="sub-heading">Animation Speed</h3>
+                        <div class="buttons">
+                            <button id="slow-speed" class="traversal-button">Slow</button>
+                            <button id="medium-speed" class="traversal-button">Medium</button>
+                            <button id="fast-speed" class="traversal-button">Fast</button>
+                        </div>
+                    </div>
+                    
+                    <div class="control-group">
+                        <h3 class="sub-heading">Tree Operation</h3>
+                        <div class="buttons">
+                            <button id="start-traversal" class="traversal-button big-button">Start Traversal</button>
+                            <button id="reset-btn" class="traversal-button big-button">Reset</button>
+                            <button id="generate-tree" class="traversal-button big-button">Generate New Tree</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="control-row-2">
+                    
+                </div> -->
+            </div>
+        
+     </section>
+
+    <!-- Visualization section -->
+     <section class="visualization-area-section">
+        <div class="visualization-max-auto">
+            <div class="visualization-area">
+                <h3 class="tree-visualization-heading">Tree Visualization</h3>
+                <div class="tree-visualization">
+                    <div class="tree-visualization-left">
+                        <div class="tree-container">
+                            <svg id="tree-svg" width="100%" height="100%" >
+                                <line class="tree-edge"></line>
+                                    <g class="tree-node">
+                                        <circle></circle>
+                                        <text>66</text>
+                                    </g>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="tree-visualization-right">
+                        <div class="tree-visualization-right-container">
+                            <h4 class="traversal-order-heading">Traversal Order</h4>
+                            <div class="traversal-result-container">
+                                <div id="traversal-result-container" class="traversal-result">
+                                    <p class="traversal-result-para">Nodes will appear here as they are visited.</p>
+                                    <!-- <div class="traversal-result-circle"></div> -->
+                                    <!-- <div class="traversal-result-arrow">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="button-arrow-white" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                                    </div> -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+     </section>
+    </main>
+
+    <div id="footer"></div>
+    <script type="module" src="scripts/Modules/treeTraversal.js"></script>
+</body>
+</html>

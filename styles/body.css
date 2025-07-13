@@ -1,0 +1,43 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
+body{
+    font-family:'Inter', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+h1, h2, h3, h4, h5, h6, hr, p, pre{
+    margin: 0;
+}
+html{
+    font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";;
+    line-height: 1.5;
+}
+audio, canvas, embed, iframe, img, object, svg, video{
+    display: block;
+    vertical-align: middle;
+}
+ul{
+    padding: 0;
+    margin:0;
+    list-style: none;
+}
+
+.button-arrow-white {
+    width: 1rem; /* 16px - same as h-4 in Tailwind */
+    height: 1rem;
+    margin-left: 0.25rem; /* same as ml-1 in Tailwind */
+    transition: transform 0.2s ease;
+}
+
+.button-arrow-black{
+    width: 1rem;
+    height: 1rem;
+    color: white;
+    position: absolute;
+    right: 1.2rem;
+    transition: transform 0.3s ease;
+}
+.module-list{
+    display: flex;
+    align-items: flex-start;
+    margin-top: 0.75rem;
+}

@@ -1,0 +1,12 @@
+/* Add this to your image.css file */
+.sorting-visualizer-image {
+    width: 100%; /* Fills container width */
+    height: 70%; /* Maintains aspect ratio */
+    max-height: 400px; /* Limits maximum height */
+    object-fit: contain; /* Ensures full image is visible */
+    border-radius: 8px; /* Matches your design */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 
+                0 2px 4px -1px rgba(0, 0, 0, 0.06); /* Subtle shadow */
+}
+
+/* Container adjustments */

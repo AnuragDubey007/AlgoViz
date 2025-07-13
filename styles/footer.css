@@ -1,0 +1,131 @@
+/* algo-viz-footer */
+.algo-viz-footer li{
+  list-style: none;
+  margin-top: 0.75rem; /* Same as space-y-3 */
+}
+.algo-viz-footer{
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    background-color: rgb(243 244 246 );
+
+}
+
+@media (min-width: 640px) {
+    .algo-viz-footer{
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+    }
+}
+.algo-viz-footer-box{
+    max-width: 80rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+.algo-viz-footer-up{
+    display: flex;
+    justify-content: space-between;
+}
+@media (min-width: 768px) {
+    .algo-viz-footer-up{
+        flex-direction: row;
+    }
+}
+
+.algo-viz-footer-leftside{
+    margin-bottom: 2rem;
+}
+@media (min-width: 768px) {
+    .algo-viz-footer-leftside{
+        margin-bottom: 0px;
+    }
+}
+.para{
+    color:rgb(75, 85,95);
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+}
+.algo-viz-footer-para{
+    
+    max-width: 20rem;
+    margin-top: 0.5rem;
+}
+
+.algo-viz-footer-rightside{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 2rem;
+}
+@media (min-width: 768px) {
+    .algo-viz-footer-rightside{
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+.algo-viz-footer-heading{
+    color:rgb(17 24 39);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    font-weight: 600;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    margin-bottom: 1rem;
+}
+
+.algo-viz-footer-sub{
+    color: rgb(75 85 99);
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    text-decoration:none;
+}
+.algo-viz-footer-sub:hover{
+    color:rgb(32, 36, 41);
+}
+.algo-viz-footer-down{
+    padding-top: 2rem;
+    border-top: solid;
+    border-color: rgb(229 231 235 );
+    border-top-width:2px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 3rem;
+    /* flex-direction: row; */
+}
+@media (min-width: 768px) {
+    .algo-viz-footer-down{
+        flex-direction: row;
+    }
+}
+.algoviz-footer-icons{
+    display: flex;
+    margin-top: 1rem;
+    gap: 1.5rem; /* Space between icons */
+    justify-content: center; /* Center the icons */
+    flex-wrap: wrap;
+    overflow: visible;
+}
+@media (min-width: 768px) {
+    .algoviz-footer-icons{
+        margin-top: 0px;
+    }
+}
+.algoviz-footer-icon{
+    color: rgb(75 85 99 );
+}
+
+
+.algoviz-footer-icon:hover {
+    color: #000; /* Black on hover */
+}
+
+/* Icon sizing */
+.h-6 {
+    height: 1.5rem;
+}
+.w-6 {
+    width: 1.5rem;
+}
+
+

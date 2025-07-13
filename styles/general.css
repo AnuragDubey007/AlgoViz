@@ -1,0 +1,63 @@
+.page-heading-section{
+    padding-top: 6rem;
+    padding-bottom: 2rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+@media (min-width: 768px) {
+    .page-heading-section{
+        padding-top: 8rem;
+        padding-bottom: 3rem;
+    }
+}
+
+@media (min-width: 640px) {
+    .page-heading-section{
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+    }
+}
+
+.page-heading-box{
+    max-width: 80rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+.text-center{
+    text-align: center;
+}
+.page-heading{
+    letter-spacing: -0.025rem;
+    font-weight: 900;
+    font-size: 2.25rem;
+    line-height: 2.5rem;
+    margin-bottom: 1rem;
+}
+@media (min-width: 768px) {
+    .page-heading{
+        font-size: 3rem;
+        line-height: 1;
+    }
+}
+
+.gradient-text {
+    background: linear-gradient(90deg, #000000, #444444);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.page-heading-para{
+    color: rgb(75 85 99);
+    max-width: 48rem;
+    margin-bottom: 2rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+@media (min-width: 768px) {
+    .page-heading-para{
+        font-size: 1.25rem;
+        line-height: 1.75rem;
+    }
+}
+
