@@ -3,6 +3,7 @@ import { grid,ROWS,COLS,getAnimationState,SetAnimationState} from "./constants.j
 import { BFS } from "./algorithms/bfs.js";
 import { DFS } from "./algorithms/dfs.js";
 import { astar } from "./algorithms/a-star.js";
+import { getCurrentSpeed, getDelay, clearWeight } from "./utils.js";
 // import {consta}
 const gridContainer = document.querySelector(".visualization-container");
 const visualizeBtn = document.getElementById("visualization-button");
@@ -11,9 +12,9 @@ const resetButton = document.getElementById('reset-btn');
 const algorithmCheck = document.querySelector("#algorithm1");
 const algorithm2 = document.querySelector("#algorithm2");
 
-const AddwallBtn = document.querySelector('#walls-btn');//it was show peice looks good so i added but evrall it is working without it 
-const AddweightBtn = document.querySelector('#weight-btn');
-const AddBombBtn = document.querySelector('#bomb-btn');
+const addWallBtn = document.querySelector('#walls-btn');//it was show peice looks good so i added but evrall it is working without it 
+const addWeightBtn = document.querySelector('#weight-btn');
+const addBombBtn = document.querySelector('#bomb-btn');
 
 const clearWallsBtn = document.getElementById('clear-Walls-btn');
 const clearPathBtn = document.getElementById('clear-path-btn');
@@ -50,9 +51,12 @@ function createGrid(){
                 isEnd: false,
                 isWall: false,
                 distance: Infinity,
-                previousNode: null
+                previousNode: null,
+                weight: 1, // Default weight
+                isWeight: false,
+                isBomb: false
             };
-
+            // node.element.classList.remove('visited','shortest-path','wall','weight','bomb','exploding','bomb-affected');
             node.element.classList.add('node');
 
             // Add row and col as data attributes for easy access
@@ -104,16 +108,44 @@ function setNodeInteraction(){
         }
 
         const node = grid[row][col];
-        if(node.isStart || node.isEnd)return;
+        if(!node || node.isStart || node.isEnd)return;
         
-        if(node.isWall){
+        if(currentTool === 'wall'){
+            if(node.isWall){
             isErasing= true;
             NodeElement.classList.remove('wall');
-            node.isWall=false;
-        }else{
-            isDrawing= true;
-            NodeElement.classList.add('wall');
-            node.isWall=true;
+                node.isWall=false;
+            }
+            else{
+                isDrawing= true;
+                NodeElement.classList.add('wall');
+                node.isWall=true;
+            }
+        }
+        else if(currentTool === 'weight'){
+            // If weight button has been disabled (e.g., BFS/DFS selected), ignore weight clicks
+            if(addWeightBtn.disabled) return ;
+
+            
+            if(!node.isWall && !node.isWeight){
+                node.isWeight = true;
+                node.weight = 5;
+                NodeElement.classList.add('weight');
+            }else if(node.isWeight){
+                node.isWeight = false;
+                node.weight = 1;
+                NodeElement.classList.remove('weight');
+            }
+        }
+        else if(currentTool == 'bomb'){
+            if(!node.isWall && !node.isBomb){
+                node.isBomb = true;
+                NodeElement.classList.add('bomb');
+            }else if(node.isBomb){
+                node.isBomb = false;
+                NodeElement.classList.remove('bomb');
+            }
+            // You can add additional logic if bomb affects algorithm
         }
         // if(node.element.classList.contains('start') || node.element.classList.contains('end')){
         //     return;
@@ -129,11 +161,13 @@ function setNodeInteraction(){
     });
 
     gridContainer.addEventListener('mousemove',(e) => {
+
         if (getAnimationState()) {
         isDrawing = false;
         isErasing = false;
         return;
-    }
+        }
+
         if(!isErasing && !isDrawing)return;
         const nodeElement = e.target;
 
@@ -147,14 +181,17 @@ function setNodeInteraction(){
 
         const node= grid[row][col];
 
-        if(node.isStart || node.isEnd)return ;
+        if(!node || node.isStart || node.isEnd)return ;
 
-        if(isDrawing){
+        if(currentTool == 'wall'){
+            if(isDrawing){
             nodeElement.classList.add('wall');
             node.isWall=true;
-        }else{
-            nodeElement.classList.remove('wall');
-            node.isWall = false;
+            }
+            else{
+                nodeElement.classList.remove('wall');
+                node.isWall = false;
+            }
         }
 
             // if(node.element.classList.contains('start') || node.classList.contains('end')){
@@ -180,12 +217,27 @@ let selectedAlgorithm = "Dijkstra's Algorithm";
 const dropDownItems = document.querySelectorAll('.dropdown-content .dropdown-item');
 
     dropDownItems.forEach((button) => {
-        button.addEventListener('click',() => {
+        button.addEventListener('click',(e) => {
             selectedAlgorithm = button.textContent;
             document.querySelector('.dropdown-button span').textContent = button.textContent;
 
             dropDownItems.forEach( i => i.classList.remove('selected'));
             button.classList.add('selected');
+
+            
+
+            if(selectedAlgorithm === 'Breadth-First-Search' || selectedAlgorithm === 'Depth-First-Search'){
+                addWeightBtn.disabled = true;
+                clearWeight();// BFS/DFS don’t support weights
+                if(currentTool === 'weight'){
+                    currentTool = 'wall';
+                    updateActiveTool();
+                }
+            }else{
+                addWeightBtn.disabled = false;
+            }
+            
+            // In future, we can also handle bombs or special tiles here
         });
     });
 
@@ -197,15 +249,20 @@ visualizeBtn.addEventListener('click',async() => {
 //     gridContainer.style.pointerEvents = 'none';
 // gridContainer.style.cursor = 'not-allowed';
     if(selectedAlgorithm==="Dijkstra's Algorithm"){
+        await explodeAllBombs();
         await dijkstra();
     }
     // else if(selectedAlgorithm==="A* Search"){
     //     await astar();
     // }
     else if(selectedAlgorithm==="Breadth-First-Search"){
+        clearWeight();
+        await explodeAllBombs();
         await BFS();
     }
     else if(selectedAlgorithm==="Depth-First-Search"){
+        clearWeight();
+        await explodeAllBombs();
         await DFS();
     }
 
@@ -229,6 +286,88 @@ window.addEventListener('click',(e)=>{
     }
 });
 
+async function explodeAllBombs(){
+    const explosionsDirections = [
+        [-1, -1], [-1, 0], [-1, 1],
+        [ 0, -1], [ 0, 0], [ 0, 1],
+        [ 1, -1], [ 1, 0], [ 1, 1],
+    ];
+
+    
+    for(let row = 0; row < ROWS; row++){
+        for(let col = 0; col < COLS; col++){
+            const node = grid[row][col];
+
+            if(node.isBomb){
+                // Animate the bomb first
+                node.isWall = true;
+
+                node.element.classList.add('bomb');
+                node.element.classList.remove('wall');
+                await getDelay(getCurrentSpeed());
+
+                //Then explode to adjacent nodes
+                for(const [dr,dc] of explosionsDirections){
+                    const newRow = row + dr;
+                    const newCol = col + dc;
+
+                    if(newRow >= 0 && newRow < ROWS && newCol >= 0 && newCol < COLS){
+                        let affectNode = grid[newRow][newCol];
+                        if(!affectNode.isStart && !affectNode.isEnd){
+                            // Make this tile behave as a wall for pathfinding:)
+                            affectNode.isWall = true;
+
+                            // Don't add 'wall' visual — add bomb-affected visual (fire/smoke).
+                            // We already have .node.bomb-affected CSS — use it.
+                            affectNode.element.classList.add('bomb-affected')
+
+                            // Ensure we don't accidentally leave a plain 'wall' class on it
+                            affectNode.element.classList.remove('wall');
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+// Track current tool
+let currentTool = 'wall';
+
+// Tool button event handlers
+addWallBtn.addEventListener('click', () => {
+    currentTool = 'wall';
+    updateActiveTool();
+});
+addWeightBtn.addEventListener('click', () => {
+    currentTool = 'weight';
+    updateActiveTool();
+});
+addBombBtn.addEventListener('click', () => {
+    currentTool = 'bomb';
+    updateActiveTool();
+});
+
+function updateActiveTool(){
+    // Reset all buttons
+    addWallBtn.classList.remove('active');
+    addWeightBtn.classList.remove('active');
+    addBombBtn.classList.remove('active');
+
+
+    // If weight button is disabled, ensure currentTool isn't 'weight'
+    if(currentTool === 'weight' && addWeightBtn.disabled){
+        currentTool = 'wall';
+    }
+
+    // Activate current tool
+    if(currentTool === 'wall')addWallBtn.classList.add('active');
+    if(currentTool === 'weight')addWeightBtn.classList.add('active');
+    if(currentTool === 'bomb')addBombBtn.classList.add('active');
+}
+updateActiveTool();
+
+
 resetButton.addEventListener('click',()=> {
     if (getAnimationState()) {
         alert("Wait! Visualization is running.");
@@ -237,10 +376,14 @@ resetButton.addEventListener('click',()=> {
     for(let row = 0; row < ROWS; row++){
         for(let col = 0; col < COLS; col++){
             const node = grid[row][col];
+            //node.element.classList.remove("visited", "shortest-path");
             node.element.className = 'node'; //Reset all classes;
             node.isWall = false;
+            node.isWeight = false;
+            node.weight = 1;
             node.distance = Infinity;
             node.previousNode = null;
+            node.isBomb = false;
             // console.log('reset');
 
             // Restore start/end nodes
@@ -251,16 +394,69 @@ resetButton.addEventListener('click',()=> {
     console.log('reset');
 });
 
-clearWallsBtn.addEventListener('click',() => {
+clearPathBtn.addEventListener('click', () => {
     for(let row = 0; row < ROWS; row++){
         for(let col = 0; col < COLS; col++){
             const node = grid[row][col];
-            if(!node.isStart && !node.isEnd){
-                node.element.className = 'node'; //Reset all classes;
-                node.isWall=false;
-            }
-            
+            node.element.classList.remove('visited', 'shortest-path'); //Reset all classes;
+            // Reset algorithm-specific properties
+            node.distance = Infinity;
+            node.isVisited = false;
+            node.previousNode = null;
         }
     }
 });
 
+clearWallsBtn.addEventListener('click',() => {
+    for(let row = 0; row < ROWS; row++){
+        for(let col = 0; col < COLS; col++){
+            const node = grid[row][col];
+            if(node.isWall){
+                node.element.classList.remove('wall', 'bomb-affected', 'bomb'); //Reset all classes;
+                node.isWall=false;
+            }
+        }
+    }
+});
+clearWeightBtn.addEventListener('click', () => {
+    for(let row = 0; row < ROWS; row++){
+        for(let col = 0; col < COLS; col++){
+            const node = grid[row][col];
+            node.element.classList.remove('weight'); 
+            node.isWeight = false;
+            node.weight = 1;// Reset to default weight
+        }
+    }
+});
+clearBoardBtn.addEventListener('click',()=> {
+    if (getAnimationState()) {
+        alert("Wait! Visualization is running.");
+        return;
+    }
+    for(let row = 0; row < ROWS; row++){
+        for(let col = 0; col < COLS; col++){
+            const node = grid[row][col];
+            node.element.className = 'node'; //Reset all classes;
+            node.isWall = false;
+            node.isWeight = false;
+            node.weight = 1;
+            node.distance = Infinity;
+            node.previousNode = null;
+            node.isBomb = false;
+        
+            if(node.isStart) node.element.classList.add('start');
+            if(node.isEnd) node.element.classList.add('end');
+        }
+    }
+    console.log('Board Cleared');
+});
+
+
+
+
+
+
+// if (!isFoundEnd) {
+//     alert("No path found!");
+//     SetAnimationState(false);
+// }

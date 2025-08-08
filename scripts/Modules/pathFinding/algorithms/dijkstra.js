@@ -1,5 +1,5 @@
 import { grid,ROWS,COLS,getAnimationState,SetAnimationState} from "../constants.js";
-import { getDelay,getCurrentSpeed } from "../utils.js";
+import { getDelay,getCurrentSpeed, PriorityQueue } from "../utils.js";
 
 export async function dijkstra(){
     // 1. Get start and end nodes
@@ -10,16 +10,24 @@ export async function dijkstra(){
             if(grid[row][col].isEnd)endNode = grid[row][col];
         }
     }
+
+    if (!startNode || !endNode) {
+        SetAnimationState(false);
+        alert('Start or End node not set.');
+        return;
+    }
      // 2. Reset all nodes (except walls)
     //  resetVisualization();
      for(let row = 0; row < ROWS; row++){
         for(let col = 0; col < COLS; col++){
             const node = grid[row][col];
-            if(!node.isStart && !node.isEnd && !node.isWall){
-                node.element.className = 'node';
-                node.distance = Infinity;
-                node.isVisited = false;
-                node.previousNode = null;
+            node.distance = Infinity;
+            node.isVisited = false;
+            node.previousNode = null;
+            // Add this line to clear any previous text:
+            node.element.textContent = '';
+            if(!node.isStart && !node.isEnd && !node.isWall && !node.isBomb){
+                node.element.classList.remove('visited', 'shortest-path');
             }
         }
      }
@@ -28,26 +36,49 @@ export async function dijkstra(){
      startNode.distance = 0;
 
     // 4. Create a list of all nodes to visit
-    const unVisitedNodes = [];
-    for(let row = 0; row < ROWS ; row++){
-        for(let col = 0; col < COLS; col++){
-            if(!grid[row][col].isWall){
-                unVisitedNodes.push(grid[row][col]);
-            }
-        }
-    }
+    const unVisitedNodes = new PriorityQueue();
+    unVisitedNodes.enqueue(startNode, 0);
+
+    // Initialize with all non-wall nodes
+    // for(let row = 0; row < ROWS ; row++){
+    //     for(let col = 0; col < COLS; col++){
+    //         if(!grid[row][col].isWall){
+    //             unVisitedNodes.enqueue(grid[row][col]);
+    //         }
+    //     }
+    // }
     // 5. Arrays to track visited nodes and shortest path
     let visitedNodesInOrder = [];
     let isFoundEnd = false;
+
+    // const visitedSet = new Set();
     // 5. Main algorithm loop
-    while(unVisitedNodes.length > 0){
-        unVisitedNodes.sort((nodeA, nodeB) => nodeA.distance - nodeB.distance);
+    while(!unVisitedNodes.isEmpty()){
+        // unVisitedNodes.sort((nodeA, nodeB) => nodeA.distance - nodeB.distance);
 
-        const closestNode = unVisitedNodes.shift();
+        const entry = unVisitedNodes.dequeue();
+        if(!entry) break;
+        const closestNode = entry.node;
+        const entryPriority = entry.priority;
 
-        if(closestNode.distance===Infinity)break;
+        // If entryPriority > current best distance, it's stale — skip it.
+        if (entryPriority > closestNode.distance) continue;
 
+        // Skip if already visited with a shorter distance
+        if (closestNode.isVisited) continue;
+
+        
+
+        // if(closestNode.isVisited)continue;
+
+        // finalize
         closestNode.isVisited = true;
+
+        if (closestNode.isWall || closestNode.isBomb) continue; // skip walls/bombs safely
+
+        // If unreachable
+        if(closestNode.distance === Infinity)break;
+
         visitedNodesInOrder.push(closestNode);
         // closestNode.element.classList.add('visited');
 
@@ -56,17 +87,17 @@ export async function dijkstra(){
             break;
         }
 
-        updateNeighbors(closestNode);
+        updateNeighbors(closestNode, unVisitedNodes);
     }
      
     // 6. After algorithm completes, show the shortest path and animate the result
     await animateAlgorithm(visitedNodesInOrder, endNode, isFoundEnd);
     // showShortestPath(endNode);
 }
-function updateNeighbors(node){
-    const row = node.row;
-    const col = node.col;
-    const neighbors = [];
+async function updateNeighbors(node, unVisitedNodes){
+    // const row = node.row;
+
+    // const col = node.col;
 
     // Get all adjacent nodes (up, down, left, right)
     // if(row > 0) neighbors.push(grid[row-1][col]);       //up
@@ -77,22 +108,24 @@ function updateNeighbors(node){
     const directions = [[-1,0],[0,1],[1,0],[0,-1]];
 
     for(const [dr,dc] of directions){
-        const newRow = row+dr;
-        const newCol = col+dc;
+        const newRow = node.row + dr;
+        const newCol = node.col + dc;
 
-        if(newRow < 0 || newRow >= ROWS || newCol < 0 || newCol >= COLS){
-            continue;
-        }
+        if(newRow >= 0 && newRow < ROWS && newCol >= 0 && newCol < COLS){
+           const neighbor = grid[newRow][newCol];
 
-        const neighbor = grid[newRow][newCol];
-        if(neighbor.isWall || neighbor.element.classList.contains('visited')){
-            continue;
-        }
-         // Calculate new distance
-        const newDistance = node.distance+1;
-        if(newDistance < neighbor.distance){
-            neighbor.distance = newDistance;
-            neighbor.previousNode = node;
+            if(!neighbor.isVisited && !neighbor.isWall && !neighbor.isBomb){
+                // Calculate new distance
+                const newDistance = node.distance + (neighbor.weight ?? 1); // For weighted: + neighbor.weight
+                if(newDistance < neighbor.distance){
+                    neighbor.distance = newDistance;
+                    neighbor.previousNode = node;
+                    // enqueue with snapshot priority
+                    unVisitedNodes.enqueue(neighbor, neighbor.distance);
+                    // debug:
+                    // console.log(`update: (${closestNode.row},${closestNode.col}) -> (${neighbor.row},${neighbor.col}) weight=${neighbor.weight} newDist=${newDistance}`);
+                }
+            }
         }
     }
    
@@ -104,7 +137,9 @@ async function animateAlgorithm(visitedNodes,endNode,isFoundEnd){
     for(let i = 0; i < visitedNodes.length ;i++){
         const node= visitedNodes[i];
         node.element.classList.add('visited');
-
+        // if(node.isWeight) {
+        //     node.element.textContent = node.weight; // Show weight value
+        // }
         await getDelay(getCurrentSpeed());
     }
 
@@ -117,6 +152,7 @@ async function animateAlgorithm(visitedNodes,endNode,isFoundEnd){
 }
 async function showShortestPath(endNode){
     const shortestPath = [];
+    
     
     // Work backwards from end node to start node
     let currentNode = endNode.previousNode;

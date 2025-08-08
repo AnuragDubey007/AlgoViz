@@ -11,11 +11,17 @@ export async function DFS(){
         }
     }
 
+    if (!startNode || !endNode) {
+        SetAnimationState(false);
+        alert('Start or End node not set.');
+        return;
+    }
+
     for(let row = 0; row < ROWS; row++){
         for(let col = 0; col < COLS; col++){
             const node = grid[row][col];
-            if(!node.isStart && !node.isEnd && !node.isWall){
-                node.element.className = 'node';
+            if(!node.isStart && !node.isEnd && !node.isWall ){
+               node.element.classList.remove('visited', 'shortest-path');
             }
             node.isVisited = false;
             node.previousNode = null;
@@ -26,7 +32,7 @@ export async function DFS(){
     let isFoundEnd = false;
 
     async function dfsHelper(node){
-        if(!node || node.isVisited || node.isVisited || isFoundEnd)return;
+        if(!node || node.isVisited || isFoundEnd)return;
 
         node.isVisited = true;
         visitedNodesInOrder.push(node);
@@ -45,7 +51,7 @@ export async function DFS(){
             if(newRow < 0 || newRow >= ROWS || newCol < 0 || newCol >= COLS)continue;
 
             const neighbor = grid[newRow][newCol];
-            if(!neighbor.isVisited && !neighbor.isWall){
+            if(!neighbor.isVisited && !neighbor.isWall && !neighbor.isBomb){
                 neighbor.previousNode = node;
                 await dfsHelper(neighbor);
             }
