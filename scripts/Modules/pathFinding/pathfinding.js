@@ -4,6 +4,8 @@ import { BFS } from "./algorithms/bfs.js";
 import { DFS } from "./algorithms/dfs.js";
 import { astar } from "./algorithms/a-star.js";
 import { getCurrentSpeed, getDelay, clearWeight } from "./utils.js";
+import { randomWalls, recursiveDivision } from "./maze.js";
+
 // import {consta}
 const gridContainer = document.querySelector(".visualization-container");
 const visualizeBtn = document.getElementById("visualization-button");
@@ -30,7 +32,7 @@ const clearBoardBtn = document.getElementById('clear-board-btn');
 // });
 
 
-let isAnimationRunning = false;
+// let isAnimationRunning = false;
 
 function createGrid(){
     gridContainer.innerHTML = "";
@@ -140,10 +142,13 @@ function setNodeInteraction(){
         else if(currentTool == 'bomb'){
             if(!node.isWall && !node.isBomb){
                 node.isBomb = true;
+                node.isWall = true;
                 NodeElement.classList.add('bomb');
+                NodeElement.classList.remove('wall');
             }else if(node.isBomb){
                 node.isBomb = false;
-                NodeElement.classList.remove('bomb');
+                node.isWall = false;
+                NodeElement.classList.remove('bomb', 'exploding', 'bomb-affected');
             }
             // You can add additional logic if bomb affects algorithm
         }
@@ -214,12 +219,19 @@ function setNodeInteraction(){
 
 let selectedAlgorithm = "Dijkstra's Algorithm";
 
-const dropDownItems = document.querySelectorAll('.dropdown-content .dropdown-item');
+const dropDownItems = document.querySelectorAll('.algorithm-content .dropdown-item');
+const dropDownItems2 = document.querySelectorAll('.maze-content .dropdown-item');
+
 
     dropDownItems.forEach((button) => {
         button.addEventListener('click',(e) => {
             selectedAlgorithm = button.textContent;
-            document.querySelector('.dropdown-button span').textContent = button.textContent;
+            
+
+            // Update only the algorithm text
+            if (algorithmTextSpan) {
+                algorithmTextSpan.textContent = selectedAlgorithm;
+            }
 
             dropDownItems.forEach( i => i.classList.remove('selected'));
             button.classList.add('selected');
@@ -237,52 +249,67 @@ const dropDownItems = document.querySelectorAll('.dropdown-content .dropdown-ite
                 addWeightBtn.disabled = false;
             }
             
+            algorithmDropdownContent.style.display = 'none'; // Updated variable name
             // In future, we can also handle bombs or special tiles here
         });
     });
 
+    let selectedMazePattern = null;
 
-visualizeBtn.addEventListener('click',async() => {
-    if(getAnimationState())return;
-    
-    SetAnimationState(true);
-//     gridContainer.style.pointerEvents = 'none';
-// gridContainer.style.cursor = 'not-allowed';
-    if(selectedAlgorithm==="Dijkstra's Algorithm"){
-        await explodeAllBombs();
-        await dijkstra();
-    }
-    // else if(selectedAlgorithm==="A* Search"){
-    //     await astar();
-    // }
-    else if(selectedAlgorithm==="Breadth-First-Search"){
-        clearWeight();
-        await explodeAllBombs();
-        await BFS();
-    }
-    else if(selectedAlgorithm==="Depth-First-Search"){
-        clearWeight();
-        await explodeAllBombs();
-        await DFS();
-    }
+    dropDownItems2.forEach((button) => {
+        button.addEventListener('click', (e) => {
+            if (getAnimationState()) return;
 
-    
-//     gridContainer.style.pointerEvents = 'auto';
-// gridContainer.style.cursor = 'auto';
+            selectedMazePattern = button.textContent;
 
-    SetAnimationState(false);
-});   
+            // Update only the maze text
+            if (mazeTextSpan) {
+                mazeTextSpan.textContent = selectedMazePattern;
+            }
 
-const dropDownBtn = document.querySelector('.dropdown-button');
-const dropdownContent = document.querySelector('.dropdown-content');
-dropDownBtn.addEventListener('click',()=> {
-    document.querySelector('.dropdown-content')
-        .style.display = dropdownContent.style.display === 'block' ? 'none' : 'block';
+            dropDownItems2.forEach(i => i.classList.remove('selected'));
+            button.classList.add('selected');
+
+            // Clear existing walls first (but keep start/end nodes)
+            clearWallsBtn.click();
+
+            if (selectedMazePattern === 'Random Walls') {
+                randomWalls();
+            } else if (selectedMazePattern === 'Recursive Division') {
+                recursiveDivision();
+            }
+
+            mazeDropdownContent.style.display = 'none'; // Updated variable name
+        });
+    })
+
+
+const algorithmDropdownBtn = document.querySelector('.algorithm-dropdown');
+const algorithmDropdownContent = document.querySelector('.algorithm-content');
+const algorithmTextSpan = document.querySelector('.algorithm-text');
+
+// Algorithm dropdown
+algorithmDropdownBtn.addEventListener('click', () => {
+    algorithmDropdownContent
+        .style.display = algorithmDropdownContent.style.display === 'block' ? 'none' : 'block';
 });
 
-window.addEventListener('click',(e)=>{
-    if(!e.target.matches('.dropdown-button')){
-        dropdownContent.style.display='none';
+
+const mazeDropdownBtn = document.querySelector('.maze-dropdown');
+const mazeDropdownContent = document.querySelector('.maze-content');
+const mazeTextSpan = document.querySelector('.maze-text');
+
+// Maze dropdown
+mazeDropdownBtn.addEventListener('click', (e) => {
+    mazeDropdownContent
+        .style.display = mazeDropdownContent.style.display === 'block' ? 'none' : 'block';
+});
+
+
+window.addEventListener('click', (e) => {
+    if (!e.target.closest('.dropdown')) {
+        document.querySelectorAll('.dropdown-content')
+            .forEach(dc => dc.style.display = 'none');
     }
 });
 
@@ -330,6 +357,54 @@ async function explodeAllBombs(){
         }
     }
 }
+
+
+
+visualizeBtn.addEventListener('click',async() => {
+    if(getAnimationState())return;
+
+    clearPathBtn.disabled = true;
+    clearWallsBtn.disabled = true;
+    clearWeightBtn.disabled = true;   
+    clearBoardBtn.disabled = true;
+    
+    SetAnimationState(true);
+//     gridContainer.style.pointerEvents = 'none';
+// gridContainer.style.cursor = 'not-allowed';
+    if(selectedAlgorithm==="Dijkstra's Algorithm"){
+        await explodeAllBombs();
+        await dijkstra();
+    }
+    else if(selectedAlgorithm==="A* Search"){
+        await explodeAllBombs();
+        await astar();
+    }
+    else if(selectedAlgorithm==="Breadth-First-Search"){
+        clearWeight();
+        await explodeAllBombs();
+        await BFS();
+    }
+    else if(selectedAlgorithm==="Depth-First-Search"){
+        clearWeight();
+        await explodeAllBombs();
+        await DFS();
+    }
+
+    // re-enable clear buttons after done
+    clearPathBtn.disabled = false;
+    clearWallsBtn.disabled = false;
+    clearWeightBtn.disabled = false;
+    clearBoardBtn.disabled = false;
+
+
+    
+//     gridContainer.style.pointerEvents = 'auto';
+// gridContainer.style.cursor = 'auto';
+
+    SetAnimationState(false);
+});   
+
+
 
 // Track current tool
 let currentTool = 'wall';
@@ -398,6 +473,7 @@ clearPathBtn.addEventListener('click', () => {
     for(let row = 0; row < ROWS; row++){
         for(let col = 0; col < COLS; col++){
             const node = grid[row][col];
+            clearAlgoVisuals(node);
             node.element.classList.remove('visited', 'shortest-path'); //Reset all classes;
             // Reset algorithm-specific properties
             node.distance = Infinity;
@@ -452,8 +528,13 @@ clearBoardBtn.addEventListener('click',()=> {
 });
 
 
-
-
+function clearAlgoVisuals(node) {
+  node.element.classList.remove('open','closed','visited','shortest-path','bomb-affected');
+  node.element.textContent = '';
+  node.isVisited = false;
+  node.distance = Infinity;
+  node.previousNode = null;
+}
 
 
 // if (!isFoundEnd) {
