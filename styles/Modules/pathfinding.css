@@ -205,7 +205,7 @@
 
 }
 .speed-box{
-    margin-top: 0.7rem;
+    margin-top: 0.1rem;
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
@@ -230,6 +230,17 @@
     stroke-linecap: round;
     stroke-linejoin: round;
 }
+.tool-icon {
+    width: 14px;
+    height: 14px;
+    margin-right: 8px; transition: transform 0.2s ease;
+}
+.tool-icon.bomb{
+    width: 20px;
+    height: 20px;
+    margin-right: 8px; transition: transform 0.2s ease;
+}
+
 .speed-label{
     color: #888888;;
     font-weight: 600;
@@ -298,6 +309,14 @@
     border-color: black;
 } */
 
+/* Action button icons */
+.action-icon {
+    width: 18px;
+    height: 18px;
+    margin-right: 8px;
+}
+
+
 
 
 
@@ -352,9 +371,11 @@
     background-color: #93C5FD;
     /* animation: visitedAnimation 0.5s ease-out; */
 }
-.legend-color.start {
-    background-color: #34c759;
+.legend-icon {
+    width: 20px;
+    height: 20px;
 }
+
 .legend-color.shortest {
     background-color: #FBBF24;
     /* animation: shortestPathAnimation 0.5s ease-out; */
@@ -382,12 +403,20 @@
     margin: 0;
 }
 .node.start {
-    background-color: #22c55e !important; /* green */
+     /* green */
+    background-image: url('/assets/icons/start.svg');
+    background-size: 75%; /* Adjust size as needed */
+    background-repeat: no-repeat;
+    background-position: center;
     /* border: 2px solid #2f9e44; */
 }
 
 .node.end {
-    background-color: #ff3b30 !important; /* red */
+    background-color: white !important; /* Remove red background */
+    background-image: url('/assets/icons/target.svg');
+    background-size: 99%;
+    background-repeat: no-repeat;
+    background-position: center;
     /* border: 2px solid #c92a2a; */
 }
 .node.wall {
@@ -399,6 +428,11 @@
     animation: visitedAnimation 0.5s ease-in;
 }
 
+.node.visited-leg1 {
+    animation: visitedLeg1Animation 0.5s ease-in forwards;
+}
+
+
 .node.shortest-path {
     background-color: #FBBF24;
     animation: shortestPathAnimation 0.5s ease-out;
@@ -406,26 +440,45 @@
 
 
 .node.weight {
-  background: linear-gradient(180deg, #0f0f0f 0%, #1a1a1a 100%);
-  border: 1px solid #2b2b2b;
-  position: relative;
+  background-image: url('/assets/icons/kettlebell.svg');
+  background-size: 70% 70%;
+  background-repeat: no-repeat;
+  background-position: center;
+  animation: weightAnimation 0.3s ease-out;
 }
 .node.weight::after {
   content: ""; /* remove number */
   display: none; /* ensure nothing appears */
 }
+/* @keyframes weightAnimation {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+} */
+
 /* ----- Bomb (ball) with flame + subtle metal look) ----- */
 
 .node.bomb {
   /* remove heavy black blob — keep the cell subtle */
-  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.03));
-  border-radius: 4px;
-  overflow: visible;
-  box-shadow: inset 0 -3px 6px rgba(0,0,0,0.06);
+  background: url('/assets/icons/bomb.svg') center center no-repeat;
+  background-size: 80%;       /* adjust so it fits inside your cell */
+  border: none;               /* remove border if you want a clean SVG look */
+  border-radius: 0;           /* no rounding, keeps SVG crisp */
 }
 
 
-
+/* Every neighbor of a bomb shows the fire SVG */
+.node.bomb-affected {
+  background: url('/assets/icons/smoke.svg') center center no-repeat; /* or /assets/icons/fire.svg */
+  background-size: 100%;
+  border: none;
+  border-radius: 0;
+}
 
 
 
@@ -529,8 +582,22 @@
     100% { transform: scale(1); background-color: #B3E5FC; }
 }
 
+/*Neon Cyberpunk (Purple-Pink)*/
+@keyframes visitedLeg1Animation {
+    0% { transform: scale(0.2); background-color: #4c0082; } /* Deep purple */
+    30% { background-color: #8a2be2; transform: scale(0.7); } /* Electric violet */
+    70% { background-color: #ff00ff; transform: scale(1.2); } /* Hot pink */
+    100% { transform: scale(1); background-color: #fa69ff; } /* Neon pink */
+}
 
-
+/* Lava Flow*/
+/*@keyframes visitedLeg1Animation {
+    0% { transform: scale(0.2); background-color: #660000; } 
+    30% { background-color: #ff3300; transform: scale(0.7); } 
+    70% { background-color: #ff6600; transform: scale(1.2); }
+    100% { transform: scale(1); background-color: #ff9966; }
+}
+*/
 
 /* Animation for the shortest path */
 @keyframes shortestPathAnimation {
@@ -553,13 +620,23 @@
 }
 
 /* Open set: light blue outline / background */
-.node.open {
-    background-color: rgba(0, 150, 255, 0.3); /* light blue tint for frontier */
-}
+
 
 /* Closed set (finalized) — slightly darker than open, but lighter than visited */
+
+.node.open {
+    background-color: rgba(236, 72, 153, 0.3); /* Vibrant pink */
+    box-shadow: 0 0 6px rgba(236, 72, 153, 0.5);
+}
+
 .node.closed {
-    background-color: rgba(255, 165, 0, 0.4); /* light orange for explored */
+    background-color: rgba(192, 38, 211, 0.4); /* Electric purple */
+    animation: closedPulse 0.3s ease-out;
+}
+
+@keyframes closedPulse {
+    0% { transform: scale(0.9); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
 }
 
 
@@ -585,4 +662,23 @@
     background-color: #1f2937;
     opacity: 1;
   }
+}
+
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  margin-top: 0.5rem;
+  padding-left: 0.5rem;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  font-size: 0.85rem;
+  color: #4b5563;
+}
+.icon-waypoint {
+  width: 14px;
+  height: 14px;
+  margin: 0 6px;
 }

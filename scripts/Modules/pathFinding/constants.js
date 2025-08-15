@@ -1,6 +1,7 @@
 export const ROWS = 25;
 export const COLS = 60;
 export let grid = [];
+export let bombMode = 'blast';
 
 export let isAnimationRunning = false;
 

@@ -1,13 +1,32 @@
 import { grid,ROWS,COLS,getAnimationState,SetAnimationState} from "../constants.js";
 import { getDelay,getCurrentSpeed, PriorityQueue } from "../utils.js";
 
-export async function dijkstra(){
+export async function dijkstra(isFirstLeg = false, wayPoint = null){
     // 1. Get start and end nodes
     let startNode, endNode;
-    for(let row = 0; row < ROWS; row++){
-        for(let col = 0; col < COLS; col++){
-            if(grid[row][col].isStart)startNode = grid[row][col];
-            if(grid[row][col].isEnd)endNode = grid[row][col];
+    if (isFirstLeg && wayPoint) {
+        // start -> waypoint
+        for (let row = 0; row < ROWS; row++) {
+            for (let col = 0; col < COLS; col++) {
+                if (grid[row][col].isStart) startNode = grid[row][col];
+                if (grid[row][col] === wayPoint) endNode = grid[row][col];
+            }
+        }
+    } else if (wayPoint) {
+        // waypoint -> end
+        for (let row = 0; row < ROWS; row++) {
+            for (let col = 0; col < COLS; col++) {
+                if (grid[row][col] === wayPoint) startNode = grid[row][col];
+                if (grid[row][col].isEnd) endNode = grid[row][col];
+            }
+        }
+    } else {
+        // normal start -> end
+        for (let row = 0; row < ROWS; row++) {
+            for (let col = 0; col < COLS; col++) {
+                if (grid[row][col].isStart) startNode = grid[row][col];
+                if (grid[row][col].isEnd) endNode = grid[row][col];
+            }
         }
     }
 
@@ -26,8 +45,14 @@ export async function dijkstra(){
             node.previousNode = null;
             // Add this line to clear any previous text:
             node.element.textContent = '';
-            if(!node.isStart && !node.isEnd && !node.isWall && !node.isBomb){
-                node.element.classList.remove('visited', 'shortest-path');
+            if (!node.isStart && !node.isEnd && !node.isWall) {
+                if (isFirstLeg) {
+                    // First run (Start → Waypoint) → clear everything
+                    node.element.classList.remove('visited', 'visited-leg1', 'shortest-path');
+                } else {
+                    // Second run (Waypoint → End) → don't clear the purple path
+                    node.element.classList.remove('visited', 'shortest-path');
+                }
             }
         }
      }
@@ -74,7 +99,7 @@ export async function dijkstra(){
         // finalize
         closestNode.isVisited = true;
 
-        if (closestNode.isWall || closestNode.isBomb) continue; // skip walls/bombs safely
+        if (closestNode.isWall) continue; // only walls block the search (waypoint may be isBomb but not isWall)
 
         // If unreachable
         if(closestNode.distance === Infinity)break;
@@ -91,10 +116,12 @@ export async function dijkstra(){
     }
      
     // 6. After algorithm completes, show the shortest path and animate the result
-    await animateAlgorithm(visitedNodesInOrder, endNode, isFoundEnd);
+    const path = await animateAlgorithm(visitedNodesInOrder, endNode, isFoundEnd , isFirstLeg, !!wayPoint);
+    return path;
     // showShortestPath(endNode);
 }
-async function updateNeighbors(node, unVisitedNodes){
+
+function updateNeighbors(node, unVisitedNodes){
     // const row = node.row;
 
     // const col = node.col;
@@ -114,7 +141,7 @@ async function updateNeighbors(node, unVisitedNodes){
         if(newRow >= 0 && newRow < ROWS && newCol >= 0 && newCol < COLS){
            const neighbor = grid[newRow][newCol];
 
-            if(!neighbor.isVisited && !neighbor.isWall && !neighbor.isBomb){
+            if(!neighbor.isVisited && !neighbor.isWall){
                 // Calculate new distance
                 const newDistance = node.distance + (neighbor.weight ?? 1); // For weighted: + neighbor.weight
                 if(newDistance < neighbor.distance){
@@ -131,26 +158,37 @@ async function updateNeighbors(node, unVisitedNodes){
    
 }
 
-async function animateAlgorithm(visitedNodes,endNode,isFoundEnd){
+async function animateAlgorithm(visitedNodes,endNode,isFoundEnd, isFirstLeg = false, hasWaypoint){
     SetAnimationState(true);
 
     for(let i = 0; i < visitedNodes.length ;i++){
         const node= visitedNodes[i];
-        node.element.classList.add('visited');
-        // if(node.isWeight) {
-        //     node.element.textContent = node.weight; // Show weight value
-        // }
+        if (!node.isStart && !node.isEnd) {
+            if (isFirstLeg) {
+                node.element.classList.remove('visited');
+                node.element.classList.add('visited-leg1');
+            } else {
+                node.element.classList.remove('visited-leg1');
+                node.element.classList.add('visited');
+            }
+        }
         await getDelay(getCurrentSpeed());
     }
 
-    if(isFoundEnd){
-        await showShortestPath(endNode);
-    }
-    else{
+    if (isFoundEnd) {
+        if (hasWaypoint) {
+            const shortestPath = await showShortestPath(endNode, true); // return array
+            return shortestPath;
+        } else {
+            await showShortestPath(endNode, false); // animate inline
+            return [];
+        }
+    } else {
         SetAnimationState(false);
+        return null;
     }
 }
-async function showShortestPath(endNode){
+async function showShortestPath(endNode, returnToStart = false){
     const shortestPath = [];
     
     
@@ -163,7 +201,7 @@ async function showShortestPath(endNode){
         currentNode = currentNode.previousNode;
     }
 
-    
+    if (returnToStart) return shortestPath;
     
     for(let i = 0; i < shortestPath.length; i++){
         shortestPath[i].element.classList.add('shortest-path');
@@ -171,3 +209,4 @@ async function showShortestPath(endNode){
     }
     SetAnimationState(false);
 }
+

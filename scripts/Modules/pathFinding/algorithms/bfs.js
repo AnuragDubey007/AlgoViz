@@ -1,28 +1,54 @@
 import { grid,ROWS,COLS,SetAnimationState } from "../constants.js";
 import { getCurrentSpeed, getDelay } from "../utils.js";
 
-export async function BFS(){
+export async function BFS(isFirstLeg = false, wayPoint = null) {
 
     let startNode,endNode;
 
-    for(let row = 0; row < ROWS; row++){
-        for(let col = 0; col < COLS; col++){
-            if(grid[row][col].isStart)startNode = grid[row][col];
-            if(grid[row][col].isEnd)endNode = grid[row][col];
+    // Determine start and end based on whether we're doing first or second leg
+    if (isFirstLeg && wayPoint) {
+        // First leg: start to waypoint
+        for(let row = 0; row < ROWS; row++){
+            for(let col = 0; col < COLS; col++){
+                if(grid[row][col].isStart) startNode = grid[row][col];
+                if(grid[row][col] === wayPoint) endNode = grid[row][col];
+            }
+        }
+    } else if (wayPoint) {
+        // Second leg: waypoint to end
+        for(let row = 0; row < ROWS; row++){
+            for(let col = 0; col < COLS; col++){
+                if(grid[row][col] === wayPoint) startNode = grid[row][col];
+                if(grid[row][col].isEnd) endNode = grid[row][col];
+            }
+        }
+    } else {
+        // Normal case: start to end
+        for(let row = 0; row < ROWS; row++){
+            for(let col = 0; col < COLS; col++){
+                if(grid[row][col].isStart) startNode = grid[row][col];
+                if(grid[row][col].isEnd) endNode = grid[row][col];
+            }
         }
     }
 
     if (!startNode || !endNode) {
         SetAnimationState(false);
         alert('Start or End node not set.');
-        return;
+        return null;
     }
     
     for(let row = 0; row < ROWS; row++){
         for(let col = 0; col < COLS; col++){
             const node = grid[row][col];
-            if(!node.isStart && !node.isEnd && !node.isWall){
-                node.element.classList.remove('visited', 'shortest-path');
+            if (!node.isStart && !node.isEnd && !node.isWall) {
+                if (isFirstLeg) {
+                    // First run (Start → Waypoint) → clear everything
+                    node.element.classList.remove('visited', 'visited-leg1', 'shortest-path');
+                } else {
+                    // Second run (Waypoint → End) → don't clear the purple path
+                    node.element.classList.remove('visited', 'shortest-path');
+                }
             }
             node.isVisited = false;
             node.previousNode = null;
@@ -62,7 +88,9 @@ export async function BFS(){
                 if (newRow >= 0 && newRow < ROWS && newCol >= 0 && newCol < COLS) {
                     const neighbor = grid[newRow][newCol];
                     //skip if wall or already visited
-                    if(!neighbor.isVisited && !neighbor.isWall && !neighbor.isBomb){
+                    // In waypoint mode a tile may be isBomb === true but isWall === false.
+                    // So use only isWall for blockage.
+                    if(!neighbor.isVisited && !neighbor.isWall){
                         neighbor.isVisited = true;
                         neighbor.previousNode = currentNode;
                         queue.push(neighbor);
@@ -72,27 +100,49 @@ export async function BFS(){
         }
     }
     // 6. After algorithm completes, show the shortest path and animate the result
-    await animateAlgorithm(visitedNodesInOrder, endNode, isFoundEnd);
+    const path = await animateAlgorithm(visitedNodesInOrder, endNode, isFoundEnd, isFirstLeg , !!wayPoint);
+    return path;
 }
 
-async function animateAlgorithm(visitedNodes,endNode,isFoundEnd){
+async function animateAlgorithm(visitedNodes,endNode,isFoundEnd, isFirstLeg, hasWaypoint){
     SetAnimationState(true);
 
     for(let i = 0; i < visitedNodes.length ;i++){
         const node= visitedNodes[i];
-        node.element.classList.add('visited');
+        // Skip start/end visuals changes
+        if (!node.isStart && !node.isEnd) {
+            if (isFirstLeg) {
+                node.element.classList.remove('visited');
+                node.element.classList.add('visited-leg1');
+            } else {
+                node.element.classList.remove('visited-leg1');
+                node.element.classList.add('visited');
+            }
+        }
 
         await getDelay(getCurrentSpeed());
+        if (node === endNode) break; // stop animation once end reached
     }
 
     if(isFoundEnd){
-        await showShortestPath(endNode);
+        // Return the shortest path array (do not animate it here)
+        if (hasWaypoint) {
+            // In waypoint mode: return the shortest-path array so the orchestrator can combine both legs
+            const shortestPath = await showShortestPath(endNode, true);
+            return shortestPath; // array (may be empty if direct neighbors)
+        } else {
+            // Normal mode (no waypoint): animate the shortest path here (legacy behavior)
+            await showShortestPath(endNode, false); // this will animate
+            return []; // return something (not used by caller)
+        }
     }
     else{
         SetAnimationState(false);
     }
 }
-async function showShortestPath(endNode){
+// If returnToStart === true -> return the array (do NOT animate).
+// If returnToStart === false -> animate and return nothing
+async function showShortestPath(endNode, returnToStart = false) {
     const shortestPath = [];
     
     // Work backwards from end node to start node
@@ -103,6 +153,8 @@ async function showShortestPath(endNode){
         shortestPath.unshift(currentNode);
         currentNode = currentNode.previousNode;
     }
+
+    if(returnToStart) return shortestPath;
     
     for(let i = 0; i < shortestPath.length; i++){
         shortestPath[i].element.classList.add('shortest-path');
@@ -110,3 +162,6 @@ async function showShortestPath(endNode){
     }
     SetAnimationState(false);
 }
+
+
+

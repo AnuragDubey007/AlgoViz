@@ -140,16 +140,48 @@ function setNodeInteraction(){
             }
         }
         else if(currentTool == 'bomb'){
-            if(!node.isWall && !node.isBomb){
+            // Waypoint mode => only allow ONE bomb (toggle)
+            if (bombMode === 'waypoint') {
+                // Remove any existing bomb(s) first
+                for (let r = 0; r < ROWS; r++) {
+                    for (let c = 0; c < COLS; c++) {
+                        const bn = grid[r][c];
+                        if (bn.isBomb) {
+                            bn.isBomb = false;
+                            // waypoint is not supposed to be a wall by default
+                            bn.isWall = false;
+                            bn.element.classList.remove('bomb', 'exploding', 'bomb-affected');
+                        }
+                    }
+                }
+
+                // Toggle the clicked node as the single waypoint bomb
+                if (!node.isBomb && !node.isStart && !node.isEnd) {
+                    node.isBomb = true;
+                    node.isWall = false;            // waypoint isn't a blocking wall
+                    NodeElement.classList.add('bomb');
+                    NodeElement.classList.remove('wall');
+                } else if (node.isBomb) {
+                    // clicked same bomb: remove it
+                    node.isBomb = false;
+                    node.isWall = false;
+                    NodeElement.classList.remove('bomb', 'exploding', 'bomb-affected');
+                }
+            }
+            else{
+                // Blast mode: keep current behaviour (allow multiple bombs, bomb acts like wall until explode)
+                if(!node.isWall && !node.isBomb){
                 node.isBomb = true;
                 node.isWall = true;
                 NodeElement.classList.add('bomb');
                 NodeElement.classList.remove('wall');
-            }else if(node.isBomb){
-                node.isBomb = false;
-                node.isWall = false;
-                NodeElement.classList.remove('bomb', 'exploding', 'bomb-affected');
+                }else if(node.isBomb){
+                    node.isBomb = false;
+                    node.isWall = false;
+                    NodeElement.classList.remove('bomb', 'exploding', 'bomb-affected');
+                }
             }
+           
             // You can add additional logic if bomb affects algorithm
         }
         // if(node.element.classList.contains('start') || node.element.classList.contains('end')){
@@ -314,9 +346,12 @@ window.addEventListener('click', (e) => {
 });
 
 async function explodeAllBombs(){
+    // Don't explode anything if in waypoint mode
+    if (bombMode === 'waypoint') return;
+
     const explosionsDirections = [
         [-1, -1], [-1, 0], [-1, 1],
-        [ 0, -1], [ 0, 0], [ 0, 1],
+        [ 0, -1],          [ 0, 1],
         [ 1, -1], [ 1, 0], [ 1, 1],
     ];
 
@@ -325,7 +360,7 @@ async function explodeAllBombs(){
         for(let col = 0; col < COLS; col++){
             const node = grid[row][col];
 
-            if(node.isBomb){
+            if(node.isBomb && bombMode === 'blast'){
                 // Animate the bomb first
                 node.isWall = true;
 
@@ -363,31 +398,200 @@ async function explodeAllBombs(){
 visualizeBtn.addEventListener('click',async() => {
     if(getAnimationState())return;
 
+    
+
     clearPathBtn.disabled = true;
     clearWallsBtn.disabled = true;
     clearWeightBtn.disabled = true;   
     clearBoardBtn.disabled = true;
+    document.getElementById("bomb-waypoint-toggle").disabled = true;
     
     SetAnimationState(true);
+
+
+    // Find the waypoint bomb if in waypoint mode
+    let waypoint = null;
+    if (bombMode === 'waypoint') {
+        for(let row = 0; row < ROWS; row++){
+            for(let col = 0; col < COLS; col++){
+                if(grid[row][col].isBomb) {
+                    waypoint = grid[row][col];
+                    break;
+                }
+            }
+            if (waypoint) break;
+        }
+    }
 //     gridContainer.style.pointerEvents = 'none';
 // gridContainer.style.cursor = 'not-allowed';
     if(selectedAlgorithm==="Dijkstra's Algorithm"){
-        await explodeAllBombs();
-        await dijkstra();
+        if (waypoint) {
+            const firstLegPath = await dijkstra(true, waypoint);
+            if (!firstLegPath) {
+                alert("No path found from start to waypoint.");
+                SetAnimationState(false);
+                clearPathBtn.disabled = false;
+                clearWallsBtn.disabled = false;
+                clearWeightBtn.disabled = false;
+                clearBoardBtn.disabled = false;
+                return;
+            }
+
+            const secondLegPath = await dijkstra(false, waypoint);
+            if (!secondLegPath) {
+                alert("No path found from waypoint to end.");
+                SetAnimationState(false);
+                clearPathBtn.disabled = false;
+                clearWallsBtn.disabled = false;
+                clearWeightBtn.disabled = false;
+                clearBoardBtn.disabled = false;
+                return;
+            }
+
+            const combined = [...firstLegPath];
+            combined.push(waypoint);
+            combined.push(...secondLegPath);
+
+            for (let i = 0; i < combined.length; i++) {
+                const n = combined[i];
+                if (!n.isStart && !n.isEnd) n.element.classList.add('shortest-path');
+                await getDelay(getCurrentSpeed());
+            }
+        }
+        else {
+            await explodeAllBombs();
+            await dijkstra();
+        }
     }
     else if(selectedAlgorithm==="A* Search"){
-        await explodeAllBombs();
-        await astar();
+        if (waypoint) {
+            const firstLegPath = await astar(true, waypoint);
+            if (!firstLegPath) {
+                alert("No path found from start to waypoint.");
+                SetAnimationState(false);
+                clearPathBtn.disabled = false;
+                clearWallsBtn.disabled = false;
+                clearWeightBtn.disabled = false;
+                clearBoardBtn.disabled = false;
+                return;
+            }
+
+            const secondLegPath = await astar(false, waypoint);
+            if (!secondLegPath) {
+                alert("No path found from waypoint to end.");
+                SetAnimationState(false);
+                clearPathBtn.disabled = false;
+                clearWallsBtn.disabled = false;
+                clearWeightBtn.disabled = false;
+                clearBoardBtn.disabled = false;
+                return;
+            }
+
+            const combined = [...firstLegPath];
+            combined.push(waypoint);
+            combined.push(...secondLegPath);
+
+            for (let i = 0; i < combined.length; i++) {
+                const n = combined[i];
+                if (!n.isStart && !n.isEnd) n.element.classList.add('shortest-path');
+                await getDelay(getCurrentSpeed());
+            }
+        }
+        else {
+            await explodeAllBombs();
+            await astar();
+        }
     }
     else if(selectedAlgorithm==="Breadth-First-Search"){
         clearWeight();
-        await explodeAllBombs();
-        await BFS();
+        if (waypoint) {
+            // Run first leg: start -> waypoint (this will animate traversal with 'visited-leg1')
+            const firstLegPath = await BFS(true, waypoint);
+
+            // If no path found to the waypoint, stop and notify
+            if (!firstLegPath) {
+                alert("No path found from start to waypoint.");
+                SetAnimationState(false);
+                // Re-enable buttons
+                clearPathBtn.disabled = false;
+                clearWallsBtn.disabled = false;
+                clearWeightBtn.disabled = false;
+                clearBoardBtn.disabled = false;
+                return;
+            }
+
+            // Run second leg: waypoint -> end (will animate traversal with 'visited')
+            const secondLegPath = await BFS(false, waypoint);
+
+            if (!secondLegPath) {
+                alert("No path found from waypoint to end.");
+                SetAnimationState(false);
+                clearPathBtn.disabled = false;
+                clearWallsBtn.disabled = false;
+                clearWeightBtn.disabled = false;
+                clearBoardBtn.disabled = false;
+                return;
+            }
+
+            // Combined shortest path = nodes between start->waypoint, then the waypoint node, then nodes waypoint->end
+            const combined = [...firstLegPath];
+            // include the waypoint tile visually in the combined shortest-path
+            combined.push(waypoint);
+            combined.push(...secondLegPath);
+
+            // Animate the combined shortest path
+            for (let i = 0; i < combined.length; i++) {
+                const n = combined[i];
+                if (!n.isStart && !n.isEnd) {
+                    n.element.classList.add('shortest-path');
+                }
+                await getDelay(getCurrentSpeed());
+            }
+        }
+        else{
+            await explodeAllBombs();
+            await BFS();
+        }
     }
     else if(selectedAlgorithm==="Depth-First-Search"){
         clearWeight();
-        await explodeAllBombs();
-        await DFS();
+        if (waypoint) {
+            const firstLegPath = await DFS(true, waypoint);
+            if (!firstLegPath) {
+                alert("No path found from start to waypoint.");
+                SetAnimationState(false);
+                clearPathBtn.disabled = false;
+                clearWallsBtn.disabled = false;
+                clearWeightBtn.disabled = false;
+                clearBoardBtn.disabled = false;
+                return;
+            }
+
+            const secondLegPath = await DFS(false, waypoint);
+            if (!secondLegPath) {
+                alert("No path found from waypoint to end.");
+                SetAnimationState(false);
+                clearPathBtn.disabled = false;
+                clearWallsBtn.disabled = false;
+                clearWeightBtn.disabled = false;
+                clearBoardBtn.disabled = false;
+                return;
+            }
+
+            const combined = [...firstLegPath];
+            combined.push(waypoint);
+            combined.push(...secondLegPath);
+
+            for (let i = 0; i < combined.length; i++) {
+                const n = combined[i];
+                if (!n.isStart && !n.isEnd) n.element.classList.add('shortest-path');
+                await getDelay(getCurrentSpeed());
+            }
+        }
+        else {
+            await explodeAllBombs();
+            await DFS();
+        }
     }
 
     // re-enable clear buttons after done
@@ -395,6 +599,7 @@ visualizeBtn.addEventListener('click',async() => {
     clearWallsBtn.disabled = false;
     clearWeightBtn.disabled = false;
     clearBoardBtn.disabled = false;
+    document.getElementById("bomb-waypoint-toggle").disabled = false;
 
 
     
@@ -474,7 +679,7 @@ clearPathBtn.addEventListener('click', () => {
         for(let col = 0; col < COLS; col++){
             const node = grid[row][col];
             clearAlgoVisuals(node);
-            node.element.classList.remove('visited', 'shortest-path'); //Reset all classes;
+            node.element.classList.remove('visited', 'visited-leg1', 'shortest-path'); //Reset all classes;
             // Reset algorithm-specific properties
             node.distance = Infinity;
             node.isVisited = false;
@@ -529,7 +734,7 @@ clearBoardBtn.addEventListener('click',()=> {
 
 
 function clearAlgoVisuals(node) {
-  node.element.classList.remove('open','closed','visited','shortest-path','bomb-affected');
+  node.element.classList.remove('open','closed','visited','shortest-path');
   node.element.textContent = '';
   node.isVisited = false;
   node.distance = Infinity;
@@ -541,3 +746,37 @@ function clearAlgoVisuals(node) {
 //     alert("No path found!");
 //     SetAnimationState(false);
 // }
+
+let bombMode = 'blast';
+
+document.getElementById('bomb-waypoint-toggle').addEventListener('change', (e) => {
+    const isWaypoint = e.target.checked;
+    bombMode = isWaypoint ? 'waypoint' : 'blast';
+    //Alternative behavior (if you want to keep one existing bomb instead of clearing all)
+    if (isWaypoint) {
+    //clear ALL existing bombs so user gets a clean single-waypoint place
+        let kept = false
+        for (let r = 0; r < ROWS; r++) {
+            for (let c = 0; c < COLS; c++) {
+                const n = grid[r][c];
+                if (n.isBomb || n.isWall) {
+                    if (!kept) {
+                        n.isBomb = false;
+                        // waypoint bombs should not be walls by default
+                        n.isWall = false;
+                        // remove bomb visuals / effects only (do NOT remove other non-bomb classes)
+                        n.element.classList.remove('bomb', 'exploding', 'bomb-affected');
+                        n.element.classList.remove('wall'); // ensure visual consistency
+                    }
+                    else{
+                        // clear all other bombs
+                        n.isBomb = false;
+                        n.isWall = false;
+                        n.element.classList.remove('bomb', 'exploding', 'bomb-affected', 'wall');
+                    }
+                }
+            }
+        }
+    }
+});
+

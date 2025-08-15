@@ -16,12 +16,25 @@ function heuristic(a, b) {
   return Math.abs(a.row - b.row) + Math.abs(a.col - b.col);
 }
 
-export async function astar() {
+export async function astar(isFirstLeg = false, wayPoint = null) {
   // 1) find start and end nodes
   let start = null;
   let end = null;
-  for (let r = 0; r < ROWS; r++) {
-    for (let c = 0; c < COLS; c++) {
+  if (isFirstLeg && wayPoint) {
+    // start -> waypoint
+    for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS; c++) {
+      if (grid[r][c].isStart) start = grid[r][c];
+      if (grid[r][c] === wayPoint) end = grid[r][c];
+    }
+  } else if (wayPoint) {
+    // waypoint -> end
+    for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS; c++) {
+      if (grid[r][c] === wayPoint) start = grid[r][c];
+      if (grid[r][c].isEnd) end = grid[r][c];
+    }
+  } else {
+    // normal start -> end
+    for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS; c++) {
       if (grid[r][c].isStart) start = grid[r][c];
       if (grid[r][c].isEnd) end = grid[r][c];
     }
@@ -50,6 +63,8 @@ export async function astar() {
       // Clear only animation visuals for regular cells (do not remove start/end/wall)
       if (!n.isStart && !n.isEnd && !n.isWall && !n.isBomb) {
         n.element.classList.remove("visited", "shortest-path", "open", "closed", "bomb-affected");
+        // only clear the purple first-leg paint when we're starting a *new* run (leg-1)
+        if (isFirstLeg) n.element.classList.remove("visited-leg1");
         n.element.textContent = ""; // clear debug/weight text
       }
     }
@@ -93,8 +108,8 @@ export async function astar() {
     // skip if already finalized
     if (current.isVisited) continue;
 
-    // skip obstacles
-    if (current.isWall || current.isBomb) continue;
+    // skip obstacles — only walls block the search (waypoint may be isBomb but not isWall)
+    if (current.isWall) continue;
 
 
     // finalize current
@@ -135,8 +150,8 @@ export async function astar() {
       
       if (neighbor.isVisited) continue;
 
-      // skip obstacles
-      if (neighbor.isWall || neighbor.isBomb) continue;
+      // skip obstacles — only isWall blocks a path. waypoint nodes may be isBomb but not isWall.
+      if (neighbor.isWall) continue;
 
       // tentative g (account for neighbor.weight)
       const newG = current.g + (neighbor.weight ?? 1);
@@ -152,7 +167,7 @@ export async function astar() {
 
         // show as open (unless start/end)
         // mark open visually
-        if (!neighbor.isStart && !neighbor.isEnd && !neighbor.isWall && !neighbor.isBomb && !neighbor.element.classList.contains("open")) {
+        if (!neighbor.isStart && !neighbor.isEnd && !neighbor.isWall && !neighbor.element.classList.contains("open")) {
             neighbor.element.classList.add('open');
         }
         // very important: allow UI to repaint so the 'open' mark appears step-by-step
@@ -161,7 +176,8 @@ export async function astar() {
     }
   }
     // 7) animate visited nodes then the shortest path (if found)
-    await animateVisited(visitedOrder, end, found);
+    const path = await animateVisited(visitedOrder, end, found, isFirstLeg, !!wayPoint);
+    return path;
 
     
     const timeTaken = (performance.now() - startTime).toFixed(2);
@@ -171,7 +187,7 @@ export async function astar() {
 
 /* --- animation helpers --- */
 
-async function animateVisited(list, end, found) {
+async function animateVisited(list, end, found, isFirstLeg, hasWaypoint) {
   // mark animation running
   SetAnimationState(true);
 
@@ -179,7 +195,13 @@ async function animateVisited(list, end, found) {
     // don't override start/end styles
     if (!n.isStart && !n.isEnd) {
         n.element.classList.remove("closed");   // <--- remove closed first
-        n.element.classList.add("visited");
+        if (isFirstLeg) {
+          n.element.classList.remove('visited');
+          n.element.classList.add('visited-leg1');
+        } else {
+          n.element.classList.remove('visited-leg1');
+          n.element.classList.add('visited');
+        }
         // optional: show weight value for debugging (remove if you want cleaner UI)
         if (n.isWeight) n.element.textContent = n.weight;
     }
@@ -187,14 +209,20 @@ async function animateVisited(list, end, found) {
   }
 
   if (found) {
-    await showPath(end);
+    if (hasWaypoint) {
+      const sp = await showPath(end, true); // return array
+      return sp;
+    } else {
+      await showPath(end, false); // animate inline
+      return [];
+    }
   } else {
-    // no path found — stop animation state
     SetAnimationState(false);
+    return null;
   }
 }
 
-async function showPath(end) {
+async function showPath(end, returnToStart = false) {
   // reconstruct path backwards using previousNode
   const path = [];
   let cur = end.previousNode;
@@ -203,6 +231,8 @@ async function showPath(end) {
     cur = cur.previousNode;
   }
 
+  if (returnToStart) return path;
+  
   // animate path (don't override start/end)
   for (const n of path) {
     if (!n.isStart && !n.isEnd) n.element.classList.add("shortest-path");
