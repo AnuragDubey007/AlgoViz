@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", () => {
+window.initAI = function(){
     const chatButton = document.getElementById('aiButton');
     const chatWindow = document.getElementById('aiChatWindow');
     const closeBtn = document.getElementById('closeChat');
@@ -100,5 +100,5 @@ document.addEventListener("DOMContentLoaded", () => {
             sendMessage();
         }
     });
-});
+};
 

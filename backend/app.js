@@ -1,6 +1,8 @@
 const dotenv = require('dotenv');
 dotenv.config(); 
 
+const path = require('path');
+
 const express = require('express');
 const app = express(); 
 
@@ -26,6 +28,13 @@ app.get('/health', (req, res) => {
 
 // AI route
 app.use('/api/ai', aiRouter);
+
+
+// 1. Serve static files from public folder
+app.use(express.static(path.join(__dirname, 'public')));
+
+// 2. Serve your project root HTML files
+app.use(express.static(path.join(__dirname, '..')));
 
 
 app.listen(PORT, () => {
