@@ -30,4 +30,3 @@ export function LoadPageHeading(title,description){
     `;
     document.getElementById("pageheading").innerHTML = headSection;
 }
-// Visualize how different pathfinding algorithms work to find the shortest path between two points.
