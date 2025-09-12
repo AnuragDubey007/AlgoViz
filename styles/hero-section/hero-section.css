@@ -33,10 +33,33 @@
     max-width: 80em;
     margin-left: auto;
     margin-right: auto;
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between;
 }
 .hero-section-box-leftside{
     max-width: 50%;
 }
+
+.Intro-sorting-image{
+    max-width: 130%;
+}
+
+
+
+@media (max-width: 768px) {
+    .Intro-sorting-image {
+        display: none;
+    }
+    .hero-section-box-rightside{
+        display: none;
+    }
+    .hero-section-box-leftside{
+        max-width: 100%;
+    }
+}
+
+
 .visualize-text{
     font-size: 52px;
     font-weight: 800;
@@ -93,16 +116,40 @@
     cursor: pointer;
 }
 
+.white-box-button:hover{
+    color: white;;
+    background-color:black;
+    /* display: flex; */
+    /*align-items: center;
+    justify-content: center; */
+    font-weight: 530;
+    font-size: 1rem;
+    position: relative;
+    line-height: 1.5em;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+    padding-left: 1.5rem;
+    padding-right: 1.2rem;
+    border-width: 1px;
+    border-radius: 5px;
+    margin-left: 1em;
+    cursor: pointer;
+    transition:0.1s
+}
+
 /* making buttons responsive */
 
 
 /*why algo viz section*/
 
 .why-algo-viz-section{
+    border-top: 1px solid #e5e7eb;
+    border-bottom: 1px solid #e5e7eb;
     padding-top: 5rem;
-    padding-bottom: 3rem;
+    padding-bottom: 5rem;
     background-color: rgb(249 250 251);
 }
+
 .why-algo-viz-box{
     max-width: 80rem;
     margin-left: auto;
@@ -152,9 +199,11 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    background-color:rgb(243 244 246);
     width: 3em;
     height: 3em;
     margin-bottom:1em;
+    border-radius: 9999px;
 }
 
 .why-algo-viz-grid-heading{
@@ -174,7 +223,7 @@
 
 .explore-section{
     padding-top: 5rem;
-    padding-bottom: 4rem;
+    padding-bottom: 5.5rem;
 }
 
 /* /*explore-section @media (min-width: 1024px) {
@@ -215,6 +264,7 @@
     display: flex;
     gap: 2rem;
 }
+
 .module1-sorting-visualizer{
     width:50%
 }
@@ -234,6 +284,9 @@
     margin-bottom:1rem;
 }
 
+.module1-text.m6{
+    background-color: #ffffff;
+}
 .sorting-visualizer-text{
     font-size: 1.5rem;
     line-height: 2rem;
@@ -247,12 +300,16 @@
     height: 1.25rem;
     margin-right: 0.5rem;
     flex-shrink: 0;
-    color: black; /* Green color, change as needed */;
+    color: black /* Green color, change as needed */;
+}
+
+.tick-icon.white{
+    color: white;
 }
 
 .module1-view-rightside {
     width: 50%;
-    padding: 1rem; /* Adds some breathing room */
+    padding: 1rem;
     display: flex;
     align-items:flex-start; /* Centers vertically */
     justify-content:center; /* Centers horizontally */
@@ -286,8 +343,7 @@
 
 .view-all-modules-box{
     text-align: center;
-    margin-top: 4rem;
-    
+    margin-top: 1rem;
 }
 
 
@@ -300,7 +356,7 @@
     padding-bottom: 4rem;
     padding-left: 1rem;
     padding-right: 1rem;
-    background-color: rgb(249 250 251);
+    background-color: rgb(8, 8, 8);
 }
 
 @media (min-width: 640px) {
@@ -316,33 +372,239 @@
     margin-right: auto;
 }
 .ai-assistant-section-box-inside{
+    display: grid;
+    align-items: center;
+    gap: 4rem;
+    position: relative;
+}
+
+@media (min-width: 1024px) {
+    .ai-assistant-section-box-inside{
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/*ai-assistant-rightside*/
+
+.ai-assistant-container {
+    background-color: #111827;
+    border-radius: 1.5rem;
+    padding: 1.5rem;
+    padding-bottom: 1.7rem;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    border: 1px solid #374151;
+}
+
+.ai-assistant-header {
     display: flex;
     align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
 }
-@media (min-width: 768px) {
-    .ai-assistant-section-box-inside{
-        flex-direction: row;
+
+.ai-assistant-profile {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.ai-assistant-avatar {
+    width: 2.5rem;
+    height: 2.5rem;
+    background: linear-gradient(to right, #ffffff, #e5e7eb);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ai-assistant-name {
+    color: white;
+    font-weight: 600;
+    margin: 0;
+}
+
+.ai-assistant-status {
+    color: #4ade80;
+    font-size: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.ai-status-indicator {
+    width: 0.5rem;
+    height: 0.5rem;
+    background-color: #4ade80;
+    border-radius: 50%;
+}
+
+.ai-assistant-time {
+    color: #9ca3af;
+    font-size: 0.875rem;
+}
+
+.ai-assistant-messages {
+    display: flex;
+    flex-direction: column;
+    gap: 1.4rem;
+    margin-bottom: 1.5rem;
+}
+
+.ai-user-message {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.ai-user-bubble {
+    background-color: white;
+    color: black;
+    border-radius: 1rem;
+    border-bottom-right-radius: 0.25rem;
+    padding: 0.5rem 1.5rem;
+    max-width: 16rem;
+}
+
+.ai-user-text {
+    font-size: 0.875rem;
+    margin: 0;
+}
+
+.ai-response {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.ai-response-bubble {
+    background-color: #1f2937;
+    color: white;
+    border-radius: 1rem;
+    border-bottom-left-radius: 0.25rem;
+    padding: 1rem 1.5rem;
+    max-width: 24rem;
+}
+
+.ai-response-text {
+    font-size: 0.875rem;
+    line-height: 1.5;
+    margin-bottom: 0.75rem;
+}
+
+.ai-response-list {
+    font-size: 0.75rem;
+    color: #d1d5db;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.ai-response-item {
+    display: flex;
+    gap: 0.25rem;
+}
+
+.ai-response-tip {
+    margin-top: 1rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid #374151;
+}
+
+.ai-tip-text {
+    font-size: 0.75rem;
+    color: #9ca3af;
+    margin: 0;
+}
+
+.ai-typing-indicator {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.ai-typing-bubble {
+    background-color: #1f2937;
+    border-radius: 1rem;
+    border-bottom-left-radius: 0.25rem;
+    padding: 1rem 1.5rem;
+}
+
+.ai-typing-dots {
+    display: flex;
+    gap: 0.25rem;
+}
+
+.ai-typing-dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    background-color: #9ca3af;
+    border-radius: 50%;
+}
+
+.ai-typing-dot:nth-child(1) {
+    animation: ai-bounce 1s infinite 0.1s;
+}
+
+.ai-typing-dot:nth-child(2) {
+    animation: ai-bounce 1s infinite 0.2s;
+}
+
+.ai-typing-dot:nth-child(3) {
+    animation: ai-bounce 1s infinite 0.3s;
+}
+
+@keyframes ai-bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-5px);
     }
 }
+
+.ai-input-area {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background-color: #1f2937;
+    border-radius: 1rem;
+    padding: 0.75rem 1rem;
+}
+
+.ai-input-field {
+    flex: 1;
+    background: transparent;
+    color: white;
+    border: none;
+    outline: none;
+    font-size: 0.875rem;
+}
+
+.ai-input-field::placeholder {
+    color: #9ca3af;
+}
+
+.ai-send-button {
+    background-color: white;
+    color: black;
+    padding: 0.5rem;
+    border-radius: 0.75rem;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.ai-send-button:hover {
+    background-color: #f3f4f6;
+}
+
+
+
+
+
+
+/*ai-assistant-leftside*/
 
 .ai-assistant-leftside{
-
-}
-@media (min-width: 768px) {
-    .md\:ai-assistant-leftside {
-        margin-bottom: 0px;
-    }
-}
-@media (min-width: 768px) {
-    .ai-assistant-leftside{
-        width: 50%;
-    }
-}
-
-@media (min-width: 768px) {
-    .ai-assistant-leftside {
-        padding-right: 3rem;
-    }
+    color: white;
 }
 
 .ai-assistant-heading{
@@ -353,7 +615,7 @@
 }
 
 .ai-assistant-para{
-    color: rgb(75 85 99 );
+    color: rgb(209 213 219);
     font-size: 1.125rem;
     line-height: 1.75rem;
     margin-bottom: 1.5rem;
@@ -362,6 +624,14 @@
 .ai-assistant-ul{
     margin-bottom: 1.5rem;
 }
+
+.ai-assistant-leftside .try-btn {
+    margin-top: 0.8rem;
+    display: inline-block;
+}
+
+
+
 
 /*ready-to-master-section*/
 
@@ -410,3 +680,29 @@
     }
 }
 
+
+
+/* hidden initial state */
+.module1-view, 
+.module2-view,
+.ai-assistant-section {
+  opacity: 0;
+  transform: translateX(-100px); /* default left */
+  transition: all 0.8s ease-out;
+}
+
+/* pathfinding comes from right */
+.module2-view {
+  transform: translateX(100px);
+}
+
+/* ai assistant comes from bottom */
+.ai-assistant-section {
+  transform: translateY(100px);
+}
+
+/* when active */
+.reveal {
+  opacity: 1;
+  transform: translate(0,0);
+}
