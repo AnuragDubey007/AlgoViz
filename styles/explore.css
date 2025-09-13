@@ -151,9 +151,16 @@
 }
 
 .explore-card-up{
-    background-color: rgb(249 250 251);
+    /* background-color: rgb(249 250 251); */
     height: 12rem;
-    position: relative;
+    width:100%;
+    /* position: relative; */
+}
+.explore-card-image {
+    width: 100%;
+    height: 100%;
+    /* object-fit: cover; */
+    transition: transform 0.3s ease;
 }
 .explore-card-down{
     padding: 1.5rem;

@@ -7,7 +7,7 @@ export const modules = [{
         thirdTag:"Merge sort"
     },
     category:"Algorithms",
-    image:"images/HomePageImages/Sorting Visualizer.png",
+    image:'../images/ExplorePageImages/explore-sorting.png',
     link:"#"
  },
  {
@@ -19,7 +19,7 @@ export const modules = [{
         thirdTag:"BFS"
     },
     category:"Algorithms",
-    image: "images/HomePageImages/Pathfinding Visualizer.png",
+    image: "../images/ExplorePageImages/explore-pathfinding.png",
     link: "#"
   },
   {
@@ -31,6 +31,7 @@ export const modules = [{
         thirdTag:"Dijkstra"
     },
     category: "Data Structures",
+    image: "../images/ExplorePageImages/explore-tree.png",
     link: "#"
   },
   {
@@ -42,7 +43,19 @@ export const modules = [{
         thirdTag:"Dequeue"
     },
     category: "Data Structures",
-    image: "images/HomePageImages/StackQueue.png",
+    image: "../images/ExplorePageImages/explore-stack.png",
+    link: "#"
+  },
+  {
+    title: "Linked Lists",
+    description: "Understand dynamic data structures and pointer manipulation. Learn singly, doubly, and circular linked list implementations.",
+    tags:{
+        firstTag:"Binary Tree",
+        secondTag:"Traversal",
+        thirdTag:"Dijkstra"
+    },
+    category: "Data Structures",
+    image: "../images/ExplorePageImages/explore-linked-list.png",
     link: "#"
   },
   {
@@ -54,10 +67,11 @@ export const modules = [{
         thirdTag:"Dijkstra"
     },
     category: "Learning Tools",
+    image: "../images/ExplorePageImages/explore-ai-assistant.png",
     link: "#"
   },
   {
-    title: "DSA Memory Coach",
+    title: "DSA Memory Coach(Coming Soon)",
     description: "Practice and memorize algorithm complexities and key concepts with flashcards.",
    tags:{
         firstTag:"FlashCards",
@@ -65,6 +79,7 @@ export const modules = [{
         thirdTag:"Dijkstra"
     },
     category: "Learning Tools",
+    image: "../images/ExplorePageImages/explore-dsa-coach.png",
     link: "#"
   }
   // Add more modules later

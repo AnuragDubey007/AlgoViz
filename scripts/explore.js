@@ -11,7 +11,9 @@ function generateModuleCards(modulesArray){
 
         card.innerHTML=
         `
-            <div class="explore-card-up"></div>
+            <div class="explore-card-up">
+                <img src="${Module.image}" alt="${Module.title}" class="explore-card-image">
+            </div>
             <div class="explore-card-down">
                 <h3>${Module.title}</h3>
                 <p class="explore-card-para">
