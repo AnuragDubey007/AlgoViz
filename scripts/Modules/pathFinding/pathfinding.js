@@ -1,3 +1,16 @@
+import { loadNavBar, loadFooter, LoadPageHeading } from "../inject.js";
+
+LoadPageHeading(
+    "Pathfinding Visualizer",
+    "Learn and visualize pathfinding algorithms. Set start, end, and obstacles to see how algorithms find the shortest path."
+);
+
+loadNavBar();
+loadFooter();
+
+
+
+
 import { dijkstra } from "./algorithms/dijkstra.js";
 import { grid,ROWS,COLS,getAnimationState,SetAnimationState} from "./constants.js";
 import { BFS } from "./algorithms/bfs.js";

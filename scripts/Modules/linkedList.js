@@ -5,8 +5,8 @@ LoadPageHeading(
     "Explore and understand the linked list data structure through interactive visualization. Add and remove nodes to see how linked lists work in real-time."
 );
 
-// loadFooter();
-// loadNavBar();
+loadFooter();
+loadNavBar();
 
 class ListNode{
     constructor(value){

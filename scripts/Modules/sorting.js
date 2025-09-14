@@ -1,4 +1,12 @@
+import { loadNavBar, loadFooter, LoadPageHeading } from "../inject.js";
 
+LoadPageHeading(
+    "Sorting Visualizer",
+    "Visualize common sorting algorithms step by step. Compare multiple algorithms and understand their behavior."
+);
+
+loadNavBar();
+loadFooter();
 
 
 
