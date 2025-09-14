@@ -9,7 +9,7 @@ export async function injectAI(showImmediately = false) {
             return;
         }
         // Fetch the HTML from public folder
-        const res = await fetch('https://algoviz-iszl.onrender.com/aiAssistant.html');
+        const res = await fetch('/aiAssistant/aiAssistant.html');
         const html = await res.text();
         
         // Create a container and inject into body
@@ -17,15 +17,15 @@ export async function injectAI(showImmediately = false) {
         container.innerHTML = html;
         document.body.appendChild(container);
 
-        // Load the AI Assistant JS
-        const script = document.createElement('script');
-        script.src = 'https://algoviz-iszl.onrender.com/aiAssistant.js';
-
         // Load the AI Assistant CSS
         const link = document.createElement('link');
         link.rel = 'stylesheet';
-        link.href = 'https://algoviz-iszl.onrender.com/aiAssistant.css';
+        link.href = '/aiAssistant/aiAssistant.css';
         document.head.appendChild(link);
+
+        // Load the AI Assistant JS
+        const script = document.createElement('script');
+        script.src = '/aiAssistant/aiAssistant.js';
 
         console.log("AI Assistant injected");
 

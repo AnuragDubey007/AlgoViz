@@ -10,8 +10,9 @@ const aiRouter = require('./routes/aiRoutes');
 
       
 app.use(express.json());
-app.use(express.static("public"));
 
+// Serve all static files from public
+app.use(express.static(path.join(__dirname, 'public')));
 
 const PORT = process.env.PORT || 3000;
 const key = process.env.GEMINI_API_KEY;
@@ -30,11 +31,6 @@ app.get('/health', (req, res) => {
 app.use('/api/ai', aiRouter);
 
 
-// 1. Serve static files from public folder
-app.use(express.static(path.join(__dirname, 'public')));
-
-// 2. Serve your project root HTML files
-app.use(express.static(path.join(__dirname, '..')));
 
 
 app.listen(PORT, () => {
