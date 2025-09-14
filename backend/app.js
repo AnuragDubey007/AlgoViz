@@ -1,6 +1,8 @@
 const dotenv = require('dotenv');
 dotenv.config(); 
 
+const cors = require('cors');
+
 const path = require('path');
 
 const express = require('express');
@@ -10,6 +12,15 @@ const aiRouter = require('./routes/aiRoutes');
 
       
 app.use(express.json());
+
+app.use(cors({
+  origin: [
+    'https://algo-viz-three.vercel.app',
+    'http://localhost:3000',
+    'http://127.0.0.1:3000'
+  ],
+  credentials: true
+}));
 
 // Serve all static files from public
 app.use(express.static(path.join(__dirname, 'public')));

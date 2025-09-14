@@ -9,7 +9,7 @@ export async function injectAI(showImmediately = false) {
             return;
         }
         // Fetch the HTML from public folder
-        const res = await fetch('/aiAssistant/aiAssistant.html');
+        const res = await fetch('https://algo-viz-three.vercel.app/aiAssistant/aiAssistant.html');
         const html = await res.text();
         
         // Create a container and inject into body
@@ -21,7 +21,7 @@ export async function injectAI(showImmediately = false) {
         // Load the AI Assistant CSS
         const link = document.createElement('link');
         link.rel = 'stylesheet';
-        link.href = '/aiAssistant/aiAssistant.css';
+        link.href = 'https://algo-viz-three.vercel.app/aiAssistant/aiAssistant.css';
         document.head.appendChild(link);
 
         // Load the AI Assistant JS
@@ -32,7 +32,7 @@ export async function injectAI(showImmediately = false) {
 
         // Load marked.js dependency first
         await loadScript('https://cdn.jsdelivr.net/npm/marked/marked.min.js');
-        await loadScript('/aiAssistant/aiAssistant.js'); // then AI logic
+        await loadScript('https://algo-viz-three.vercel.app/aiAssistant/aiAssistant.js'); // then AI logic
 
         //Initialize AI logic safely
         if (window.initAI) window.initAI();
