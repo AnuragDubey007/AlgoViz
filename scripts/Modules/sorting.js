@@ -405,6 +405,87 @@ async function mergeSort(bars, counterKey = "single"){
         await wait(5);
     }
 }
+
+
+async function quickSort(bars, counterKey = "single") {
+    let n = bars.length;
+
+    async function partition(low, high) {
+        let pivotHeight = parseInt(bars[high].style.height);
+        colorBar(bars[high], "pivot");
+        let i = low - 1;
+
+        for (let j = low; j < high; j++) {
+            counters[counterKey].comparisons++;
+            updateStats();
+
+            colorBar(bars[j], "comparing");
+            await pauseCheck();
+            if (stopSort) return -1;
+            await wait(getDelay());
+
+            let heightJ = parseInt(bars[j].style.height);
+
+            if (heightJ < pivotHeight) {
+                i++;
+                // swap bars[i] and bars[j]
+                let temp = bars[i].style.height;
+                bars[i].style.height = bars[j].style.height;
+                bars[j].style.height = temp;
+
+                counters[counterKey].swaps++;
+                updateStats();
+
+                colorBar(bars[i], "swapping");
+                colorBar(bars[j], "swapping");
+                await pauseCheck();
+                if (stopSort) return -1;
+                await wait(getDelay());
+            }
+            colorBar(bars[j], null);
+        }
+
+        // place pivot at correct position
+        let temp = bars[i + 1].style.height;
+        bars[i + 1].style.height = bars[high].style.height;
+        bars[high].style.height = temp;
+
+        colorBar(bars[i + 1], "swapping");
+        counters[counterKey].swaps++;
+        updateStats();
+        await pauseCheck();
+        if (stopSort) return -1;
+        await wait(getDelay());
+
+        colorBar(bars[i + 1], null);
+        colorBar(bars[high], null);
+
+        return i + 1;
+    }
+
+    async function quickSortHelper(low, high) {
+        if (low < high) {
+            let pi = await partition(low, high);
+            if (pi === -1) return; // stop early if sorting stopped
+
+            await quickSortHelper(low, pi - 1);
+            await quickSortHelper(pi + 1, high);
+        } else if (low === high) {
+            // single element is sorted
+            colorBar(bars[low], "sorted");
+        }
+    }
+
+    await quickSortHelper(0, n - 1);
+
+    // mark all bars as sorted
+    for (let i = 0; i < n; i++) {
+        colorBar(bars[i], "sorted");
+        await wait(5);
+    }
+}
+
+
 function disableCompareCheckBoxBtn(){
     compareCheckBoxBtn.disabled = true;
     compareCheckBoxBtn.style.cursor = "not-allowed";
@@ -433,11 +514,13 @@ sortBtn.addEventListener("click",async()=> {
         if(selectAlgo1=="selection")tasks.push(selectionSort(bar1, "algo1"));
         if(selectAlgo1=="insertion")tasks.push(insertionSort(bar1, "algo1"));
         if(selectAlgo1=="merge")tasks.push(mergeSort(bar1, "algo1"));
+        if(selectAlgo1=="quick")tasks.push(quickSort(bar1, "algo1"));
 
         if(selectAlgo2=="bubble")tasks.push(bubbleSort(bar2, "algo2"));
         if(selectAlgo2=="selection")tasks.push(selectionSort(bar2, "algo2"));
         if(selectAlgo2=="insertion")tasks.push(insertionSort(bar2, "algo2"));
         if(selectAlgo2=="merge")tasks.push(mergeSort(bar2, "algo2"));
+        if(selectAlgo2=="quick")tasks.push(quickSort(bar2, "algo2"));
 
         await Promise.all(tasks);
 
@@ -454,6 +537,8 @@ sortBtn.addEventListener("click",async()=> {
             await selectionSort(bars, "single");
         }else if(selectAlgo=="insertion"){
             await insertionSort(bars, "single");
+        }else if(selectAlgo=="quick"){
+            await quickSort(bars, "single");
         }//add more later...}
     }
     enableCompareCheckBoxBtn();
