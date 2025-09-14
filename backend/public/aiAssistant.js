@@ -100,5 +100,26 @@ window.initAI = function(){
             sendMessage();
         }
     });
+
+
+        sendBtn.addEventListener('click', sendMessage);
+
+    chatInput.addEventListener('keydown',(e) => {
+        if(e.key === "Enter" && !e.shiftKey){
+            e.preventDefault();
+            sendMessage();
+        }
+    });
+
+    //quick message
+    const quickButtons = document.querySelectorAll(".quick-question");
+    quickButtons.forEach(btn => {
+        btn.addEventListener("click", () => {
+            const question = btn.textContent.trim();
+            chatInput.value = question;
+            sendMessage();
+        });
+    });
+
 };
 

@@ -4,9 +4,15 @@
 /* ---- Container placement ---- */
 .ai-assistant {
   position: fixed;
-  bottom: 24px; /* bottom-6 */
-  right: 24px;  /* right-6 */
+  bottom: 24px; 
+  right: 24px; 
   z-index: 50;
+}
+
+.ai-button-wrapper {
+    position: relative;
+    width: 56px;
+    height: 56px;
 }
 
 /* ---- Floating button ---- */
@@ -16,14 +22,15 @@
   background: #000;
   color: #fff;
   border-radius: 50%;
-  box-shadow: 0 25px 50px rgba(0,0,0,0.25); /* shadow-2xl */
+  box-shadow: 0 25px 50px rgba(0,0,0,0.25); 
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: transform 0.2s ease, background-color 0.2s ease, opacity 0.2s ease;
   position: relative; /* for notification dot */
-  
+  overflow: hidden;
+  z-index: 1;
 }
 .ai-button:hover { transform: scale(1.1); }
 .ai-button-icon { width: 24px; height: 24px; }
@@ -50,8 +57,6 @@
   transform: rotate(10deg) translate(-150%, -150%);
   transition: transform 0.6s ease;
   pointer-events: none;
-  z-index: 1; /* Add this to contain the shine behind content */
-  overflow: hidden;
 }
 
 .ai-button:hover::after {
@@ -71,7 +76,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 10; /* Add this line to ensure dot appears above the shine */
+  z-index: 10; /* dot appears above the shine */
 }
 .ai-notification-dot-inner {
   width: 8px;
@@ -90,10 +95,10 @@
   position: absolute;
   bottom: 64px; /* bottom-16 relative to button */
   right: 0;
-  width: 384px; /* w-96 */
+  width: 384px; 
   height: 500px;
   background: #fff;
-  border-radius: 16px; /* rounded-2xl */
+  border-radius: 16px; 
   box-shadow: 0 25px 50px rgba(0,0,0,0.25);
   border: 1px solid #e5e7eb;
   overflow: hidden;
@@ -102,7 +107,9 @@
   pointer-events: none;
   transition: transform 0.25s ease, opacity 0.25s ease;
 }
-/* Add/remove this class from JS to open the chat */
+
+
+/*JS to open the chat */
 .ai-chat-window.open {
   transform: translateY(0);
   opacity: 1;
@@ -142,7 +149,7 @@
 .ai-name { font-weight: 600; font-size: 14px; }
 .ai-status {
   display: flex; align-items: center; gap: 6px;
-  color: #34d399; /* green-400 */
+  color: #34d399; 
   font-size: 12px;
 }
 .ai-status-dot {
@@ -161,10 +168,14 @@
 .ai-close:hover { color: #fff; background-color: rgba(255,255,255,0.08); }
 .ai-close-icon { width: 20px; height: 20px; }
 
+
+
+
+
 /* ---- Messages ---- */
 .ai-messages {
-  background: #f9fafb; /* gray-50 */
-  height: 320px;       /* h-80 */
+  background: #f9fafb; 
+  height: 320px;      
   overflow-y: auto;
   padding: 16px;
 }
@@ -174,17 +185,20 @@
 .message-bubble {
   background: #fff;
   border-radius: 16px;
-  border-bottom-left-radius: 6px; /* rounded-bl-md */
+  border-bottom-left-radius: 6px; 
   padding: 12px 16px;
   box-shadow: 0 1px 2px rgba(0,0,0,0.06);
-  max-width: 320px; /* max-w-xs */
+  max-width: 320px; 
 }
 .message-text {
   margin: 0;
-  font-size: 14px;
-  color: #1f2937;
+  font-size: 16px;
+  line-height: 1.5;
+  color: black;
   white-space: pre-wrap;
 }
+
+
 
 /* Quick questions */
 .quick-questions { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 4px; }
@@ -192,13 +206,20 @@
   background: #f3f4f6;
   border: none;
   padding: 4px 8px;
-  border-radius: 9999px;
+  border-radius: 20px;
   font-size: 12px;
   color: #111827;
   cursor: pointer;
-  transition: background-color 0.15s ease;
+  transition: background-color 0.3s ease, 
+              color 0.3s ease, 
+              border-radius 0.3s ease;
 }
-.quick-question:hover { background: #e5e7eb; }
+.quick-question:hover { 
+  background: #000; 
+  color: #ffffff;
+  border-radius:2px;
+
+ }
 
 /* ---- Typing indicator ---- */
 .typing-indicator { padding: 0 16px 8px 16px; }
@@ -232,7 +253,10 @@
   outline: none;
   transition: background-color 0.15s ease, box-shadow 0.15s ease;
 }
-.chat-input::placeholder { color: #6b7280; }
+.chat-input::placeholder { 
+  color: #6b7280;
+  /*text-align: center;*/
+}
 .chat-input:focus {
   background: #fff;
   box-shadow: 0 0 0 2px #000; /* focus ring */
@@ -249,7 +273,7 @@
 }
 .chat-send:hover { background: #1f2937; }
 .chat-send:disabled { opacity: 0.5; cursor: not-allowed; }
-.chat-send-icon { width: 16px; height: 16px; }
+.chat-send-icon { width: 16px; height: 16px; transform: rotate(90deg);}
 
 .chat-footer-note {
   
@@ -265,4 +289,42 @@
     right: -8px;
     width: calc(100vw - 32px);
   }
+}
+
+
+
+/* ---- User messages ---- */
+.user-row {
+  justify-content: flex-end; /*right */
+}
+
+.user-message {
+  background: #000;          /* black bubble */
+  color: #fff;
+  border-radius: 16px;
+  border-bottom-right-radius: 6px; /* mirror AI bubble */
+  padding: 12px 16px;
+  max-width: 320px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+  text-align: left;
+}
+
+.user-message .message-text {
+  color: #fff; 
+}
+
+.user-message .message-text {
+  color: #fff;
+}
+
+.user-avatar {
+  width: 28px;
+  height: 28px;
+  background: #111827;
+  color: #fff;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
 }
