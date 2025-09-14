@@ -220,9 +220,18 @@
 .node-content.head {
     background-color:#0066cc;
 }
-.highlight {
-    /* wants highlight animation will do at last of project   */
+
+.node-content.highlight {
+    background-color: #ff9800 !important; 
+    box-shadow: 0 0 15px rgba(255, 152, 0, 0.8);
+    animation: pulse 1.5s ease-in-out infinite alternate;
 }
+
+@keyframes pulse {
+    from { transform: scale(1); }
+    to { transform: scale(1.15); }
+}
+
 .node-content.tail {
     background-color:#43a047;
 }

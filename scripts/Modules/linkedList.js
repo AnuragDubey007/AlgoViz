@@ -124,9 +124,21 @@ class LinkedList{
         }
        
     }
+
+    search(value){
+        const results = [];
+        let idx = 0;
+        let cur = this.head;
+        while(cur){
+            if(cur.value === value) results.push(idx);
+            cur = cur.next;
+            idx++;
+        }
+        return results;
+    }
 }
 
-function renderLinkedList(list){
+function renderLinkedList(list, highlightValue = null){
     const container = document.querySelector(".linked-list");
     container.innerHTML = '';
     
@@ -146,6 +158,11 @@ function renderLinkedList(list){
             nodeContent.classList.add("tail");
         }else{
             nodeContent.classList.add("current");
+        }
+
+        // Highlight if matches
+        if (highlightValue !== null && current.value === highlightValue) {
+            nodeContent.classList.add("highlight");
         }
 
         nodeContent.textContent = current.value;
@@ -190,6 +207,8 @@ function renderLinkedList(list){
     
     
     container.appendChild(nullNode);
+
+    updateStats(list);
 
 }
 
@@ -248,6 +267,18 @@ removeAtPositionBtn.addEventListener('click', () => {
     renderLinkedList(list);
 });
 
+searchBtn.addEventListener("click", () => {
+    const value = parseInt(valueInput.value);
+    if (isNaN(value)) return;
+
+    const found = list.search(value);
+    if (found.length > 0) {
+        renderLinkedList(list, value); // re-render and highlight node
+    } else {
+        alert("Value not found in list!");
+    }
+});
+
 clearAllBtn.addEventListener('click', () => {
     list.head = null;
     list.tail = null;
@@ -255,12 +286,23 @@ clearAllBtn.addEventListener('click', () => {
     renderLinkedList(list);
 });
 
+function updateStats(list) {
+    const sizeElement = document.querySelector('.stat-item:nth-child(1) .stat-value');
+    const headElement = document.querySelector('.stat-item:nth-child(2) .stat-value');
+    const tailElement = document.querySelector('.stat-item:nth-child(3) .stat-value');
+    
+    sizeElement.textContent = list.size;
+    headElement.textContent = list.head ? list.head.value : '-';
+    tailElement.textContent = list.tail ? list.tail.value : '-';
+}
+
 // const list=new LinkedList();
+list.addAtHead(15);
+list.addAtHead(27);
 list.addAtHead(10);
-list.addAtHead(10);
-list.addAtHead(10);
-list.addAtTail(20);
+list.addAtTail(89);
 list.addAtHead(5);
 console.log(list);
 
 renderLinkedList(list);
+updateStats(list);
