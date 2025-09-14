@@ -211,9 +211,7 @@
     <div id="footer"></div>
     <script type="module" src="/scripts/Modules/sorting.js"></script>
     <script type="module">
-        import { injectAI } from '/scripts/injectAi.js';
-    
-        // Add error handling
+        import { injectAI } from "./scripts/injectAI.js";
         document.addEventListener('DOMContentLoaded', async () => {
             try {
                 await injectAI();
@@ -223,5 +221,6 @@
             }
         });
     </script>
+
 </body>
 </html>
