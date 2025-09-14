@@ -14,6 +14,7 @@ export async function injectAI(showImmediately = false) {
         
         // Create a container and inject into body
         const container = document.createElement('div');
+        container.id = 'aiAssistantContainer';
         container.innerHTML = html;
         document.body.appendChild(container);
 
@@ -24,14 +25,14 @@ export async function injectAI(showImmediately = false) {
         document.head.appendChild(link);
 
         // Load the AI Assistant JS
-        const script = document.createElement('script');
-        script.src = '/aiAssistant/aiAssistant.js';
+        // const script = document.createElement('script');
+        // script.src = '/aiAssistant/aiAssistant.js';
 
         console.log("AI Assistant injected");
 
         // Load marked.js dependency first
         await loadScript('https://cdn.jsdelivr.net/npm/marked/marked.min.js');
-        await loadScript('/aiAssistant.js'); // then AI logic
+        await loadScript('/aiAssistant/aiAssistant.js'); // then AI logic
 
         //Initialize AI logic safely
         if (window.initAI) window.initAI();

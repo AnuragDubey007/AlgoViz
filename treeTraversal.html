@@ -110,8 +110,12 @@
     <div id="footer"></div>
     <script type="module" src="scripts/Modules/treeTraversal.js"></script>
     <script type="module">
-        import { injectAI } from '/scripts/injectAi.js';
-        injectAI();
+        import { injectAI } from "/scripts/injectAI.js";
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            await injectAI(); // showImmediately defaults to false
+        });
+        
     </script>
 </body>
 </html>

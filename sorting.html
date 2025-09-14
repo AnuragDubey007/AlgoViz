@@ -211,15 +211,12 @@
     <div id="footer"></div>
     <script type="module" src="/scripts/Modules/sorting.js"></script>
     <script type="module">
-        import { injectAI } from "./scripts/injectAI.js";
+        import { injectAI } from "/scripts/injectAI.js";
+
         document.addEventListener('DOMContentLoaded', async () => {
-            try {
-                await injectAI();
-                console.log('AI injected successfully');
-            } catch (error) {
-                console.error('Failed to inject AI:', error);
-            }
+            await injectAI(); // showImmediately defaults to false
         });
+        
     </script>
 
 </body>
