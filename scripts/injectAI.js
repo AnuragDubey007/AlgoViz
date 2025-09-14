@@ -1,7 +1,12 @@
 export async function injectAI() {
     try {
+        // Check if AI is already injected
+        if (document.getElementById('aiAssistantContainer')) {
+            console.log("AI Assistant already exists");
+            return;
+        }
         // Fetch the HTML from public folder
-        const res = await fetch('/aiAssistant.html');
+        const res = await fetch('https://algoviz-iszl.onrender.com/public/aiAssistant.html');
         const html = await res.text();
         
         // Create a container and inject into body
@@ -11,13 +16,13 @@ export async function injectAI() {
 
         // Load the AI Assistant JS
         const script = document.createElement('script');
-        script.src = '/aiAssistant.js';
+        script.src = 'https://algoviz-iszl.onrender.com/public/aiAssistant.js';
         document.body.appendChild(script);
 
         // Load the AI Assistant CSS
         const link = document.createElement('link');
         link.rel = 'stylesheet';
-        link.href = '/aiAssistant.css';
+        link.href = 'https://algoviz-iszl.onrender.com/public/aiAssistant.css';
         document.head.appendChild(link);
 
         console.log("AI Assistant injected");
