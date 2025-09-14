@@ -1,5 +1,6 @@
 import { loadNavBar, loadFooter, LoadPageHeading } from "../inject.js";
 
+document.addEventListener("DOMContentLoaded", () => {
 LoadPageHeading(
     "Sorting Visualizer",
     "Visualize common sorting algorithms step by step. Compare multiple algorithms and understand their behavior."
@@ -7,7 +8,7 @@ LoadPageHeading(
 
 loadNavBar();
 loadFooter();
-
+});
 
 
 

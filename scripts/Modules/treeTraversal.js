@@ -1,12 +1,12 @@
 import { loadNavBar, loadFooter, LoadPageHeading } from "../inject.js";
-
+document.addEventListener("DOMContentLoaded", () => {
 LoadPageHeading(
     "Tree Traversal Visualizer",
     "Visualize binary trees and binary search trees. Explore traversal algorithms like In-order, Pre-order, Post-order, and Level-order."
 );
 loadNavBar();
 loadFooter();
-
+});
 
 
 const generateButton = document.getElementById("generate-tree");

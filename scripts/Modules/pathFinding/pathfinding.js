@@ -1,13 +1,14 @@
-import { loadNavBar, loadFooter, LoadPageHeading } from "../inject.js";
+import { loadNavBar, loadFooter, LoadPageHeading } from "../../inject.js";
 
-LoadPageHeading(
-    "Pathfinding Visualizer",
-    "Learn and visualize pathfinding algorithms. Set start, end, and obstacles to see how algorithms find the shortest path."
-);
+document.addEventListener("DOMContentLoaded", () => {
+    LoadPageHeading(
+        "Pathfinding Visualizer",
+        "Learn and visualize pathfinding algorithms. Set start, end, and obstacles to see how algorithms find the shortest path."
+    );
 
-loadNavBar();
-loadFooter();
-
+    loadNavBar();
+    loadFooter();
+});
 
 
 

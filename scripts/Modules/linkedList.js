@@ -1,5 +1,6 @@
 import {loadNavBar,loadFooter, LoadPageHeading } from "../inject.js";
 
+document.addEventListener("DOMContentLoaded", () => {
 LoadPageHeading(
     "Linked List Visualizer",
     "Explore and understand the linked list data structure through interactive visualization. Add and remove nodes to see how linked lists work in real-time."
@@ -7,6 +8,7 @@ LoadPageHeading(
 
 loadFooter();
 loadNavBar();
+});
 
 class ListNode{
     constructor(value){
