@@ -20,7 +20,7 @@ export const modules = [{
     },
     category:"Algorithms",
     image: "../images/ExplorePageImages/explore-pathfinding.png",
-    link: "/pathfinding.html"
+    link: "/pathFinding.html"
   },
   {
     title: "Tree and Graph Visualizer",
