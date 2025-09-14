@@ -58,7 +58,7 @@ window.initAI = function(){
         showTyping(true);
 
         try{    
-            const res = await fetch('/api/ai',{
+            const res = await fetch('https://algoviz-iszl.onrender.com/api/ai', {
                 method: 'POST',
                 headers: {'Content-Type' : 'application/json'},
                 body: JSON.stringify({message})
