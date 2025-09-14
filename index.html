@@ -28,13 +28,13 @@
                 </h1>
                 <p class="Visualize-paragraph">An interactive plateform to visualize, understand, and learn DSA concepts with AI-powered assistance. See algorithms in action and build intution through animation.</p>
                 <div class="start-view-buttons">
-                    <button class="start-exploring-button black-box-button">
+                    <button class="start-exploring-button black-box-button" onclick="location.href='explore.html'">
                         Start Exploring 
                         <svg xmlns="http://www.w3.org/2000/svg" class="button-arrow-black" viewBox="0 0 20 20" fill="currentColor">
                                 <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd"></path>
                         </svg>
                     </button>
-                    <button class="white-box-button"> View Modules </button>
+                    <button class="white-box-button" onclick="location.href='explore.html'"> View Modules </button>
                 </div>
             </div>
             <div class="hero-section-box-rightside">
@@ -128,7 +128,7 @@
 
                                 </ul>
                             
-                            <a href="#" class="try-it-now-button">Try it now
+                            <a href="sorting.html" class="try-it-now-button">Try it now
                                 <svg xmlns="http://www.w3.org/2000/svg" class="button-arrow-white" viewBox="0 0 20 20" fill="currentColor">
                                 <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
                             </a>
@@ -173,7 +173,7 @@
 
                                 </ul>
                             
-                            <a href="#" class="try-it-now-button">Try it now
+                            <a href="pathFinding.html" class="try-it-now-button">Try it now
                                 <svg xmlns="http://www.w3.org/2000/svg" class="button-arrow-white" viewBox="0 0 20 20" fill="currentColor">
                                 <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
                             </a>
@@ -186,7 +186,7 @@
                 </div>
 
                 <div class="view-all-modules-box">
-                    <a href="" class="view-all-modules-text black-box-button">View All Modules
+                    <a href="explore.html" class="view-all-modules-text black-box-button">View All Modules
                         <svg xmlns="http://www.w3.org/2000/svg" class="button-arrow-black" viewBox="0 0 20 20" fill="currentColor">
                                 <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
                     </a>
@@ -310,7 +310,7 @@
                 Start your journey to becoming a DSA expert with our interactive visualizations and AI-powered assistance.
                 </p>
                 <div class="get-start-and-learn-button">
-                    <a href="" class="black-box-button">Get start now </a>
+                    <a href="explore.html" class="black-box-button">Get start now </a>
                     <button class="white-box-button learn-more-button">Learn More</button>
                 </div>
             </div>
@@ -321,5 +321,18 @@
     </main>
     <script type="module" src="scripts/main.js"></script>
     <script src="scripts/scroll-animations.js"></script>
+    <script type="module">
+  import { injectAI } from "./scripts/injectAI.js";
+
+  document.querySelector(".try-btn").addEventListener("click", async () => {
+    // Inject only once
+    if (!document.querySelector(".ai-assistant")) {
+      await injectAI();
+    }
+    // Open immediately
+    document.querySelector(".ai-button").click();
+  });
+</script>
+
 </body>
 </html>

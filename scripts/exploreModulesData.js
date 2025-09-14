@@ -8,7 +8,7 @@ export const modules = [{
     },
     category:"Algorithms",
     image:'../images/ExplorePageImages/explore-sorting.png',
-    link:"#"
+    link:"/sorting.html"
  },
  {
     title: "Pathfinding Visualizer",
@@ -20,7 +20,7 @@ export const modules = [{
     },
     category:"Algorithms",
     image: "../images/ExplorePageImages/explore-pathfinding.png",
-    link: "#"
+    link: "/pathfinding.html"
   },
   {
     title: "Tree and Graph Visualizer",
@@ -32,7 +32,7 @@ export const modules = [{
     },
     category: "Data Structures",
     image: "../images/ExplorePageImages/explore-tree.png",
-    link: "#"
+    link: "/treeTraversal.html"
   },
   {
     title: "Stack & Queue Simulator",
@@ -56,7 +56,7 @@ export const modules = [{
     },
     category: "Data Structures",
     image: "../images/ExplorePageImages/explore-linked-list.png",
-    link: "#"
+    link: "/linkedlist.html"
   },
   {
     title: "AI Assistant",
