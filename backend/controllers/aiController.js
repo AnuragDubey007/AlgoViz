@@ -20,7 +20,7 @@ exports.handleAIRequest = async (req, res) => {
 
         // const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent';
 
-        const url = 'https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash-001:generateContent';
+        const url = 'https://generativelanguage.googleapis.com/v1/models/gemini-flash-latest:generateContent';
 
         
         const response = await axios.post(url, payload, {
