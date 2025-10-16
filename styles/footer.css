@@ -18,12 +18,6 @@
     margin-right: 1px;
 }
 
-@media (min-width: 640px) {
-    .algo-viz-footer{
-        padding-left: 1.5rem;
-        padding-right: 1.5rem;
-    }
-}
 .algo-viz-footer-box{
     max-width: 80rem;
     margin-left: auto;
@@ -33,20 +27,11 @@
     display: flex;
     justify-content: space-between;
 }
-@media (min-width: 768px) {
-    .algo-viz-footer-up{
-        flex-direction: row;
-    }
-}
 
 .algo-viz-footer-leftside{
     margin-bottom: 2rem;
 }
-@media (min-width: 768px) {
-    .algo-viz-footer-leftside{
-        margin-bottom: 0px;
-    }
-}
+
 .para{
     color:rgb(75, 85,95);
     font-size: 0.875rem;
@@ -62,11 +47,6 @@
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     gap: 2rem;
-}
-@media (min-width: 768px) {
-    .algo-viz-footer-rightside{
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
 }
 
 .algo-viz-footer-heading{
@@ -99,11 +79,7 @@
     margin-top: 3rem;
     /* flex-direction: row; */
 }
-@media (min-width: 768px) {
-    .algo-viz-footer-down{
-        flex-direction: row;
-    }
-}
+
 .algoviz-footer-icons{
     display: flex;
     margin-top: 1rem;
@@ -112,15 +88,10 @@
     flex-wrap: wrap;
     overflow: visible;
 }
-@media (min-width: 768px) {
-    .algoviz-footer-icons{
-        margin-top: 0px;
-    }
-}
+
 .algoviz-footer-icon{
     color: rgb(75 85 99 );
 }
-
 
 .algoviz-footer-icon:hover {
     color: #000; /* Black on hover */
@@ -135,3 +106,60 @@
 }
 
 
+/* Mobile Responsive Footer */
+@media (max-width: 768px) {
+    .algo-viz-footer-up {
+        flex-direction: column;
+    }
+    
+    .algo-viz-footer-rightside {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .algo-viz-footer-down {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+    
+    .algoviz-footer-icons {
+        justify-content: center;
+    }
+    
+    .algo-viz-footer-leftside {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    
+    .algo-viz-footer-para {
+        max-width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .algo-viz-tag-box{
+        
+         text-align: center;
+    }
+    .algo-viz-tag-box ul {
+        text-align: center; /* Add this line */
+        padding: 0;
+        list-style: none;
+    }
+    .algo-viz-tag-box li {
+        display: flex; /* Add this */
+        justify-content: center; /* Add this */
+    }
+}
+
+/* For very small screens */
+@media (max-width: 480px) {
+    .algo-viz-footer {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+    }
+    
+    .algo-viz-footer-rightside {
+        gap: 1rem;
+    }
+}
