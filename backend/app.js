@@ -10,6 +10,8 @@ const app = express();
 
 const aiRouter = require('./routes/aiRoutes');
 
+const axios = require('axios');
+
       
 app.use(express.json());
 
@@ -31,6 +33,34 @@ const key = process.env.GEMINI_API_KEY;
 if(!key){
     console.log('Missing GEMINI_API_KEY in environment');
 }
+
+
+//Google Api Models for debug
+// app.get('/api/debug', async (req, res) => {
+//     try {
+//         const modelsUrl = 'https://generativelanguage.googleapis.com/v1beta/models';
+//         const response = await axios.get(modelsUrl, {
+//             params: { key: process.env.GEMINI_API_KEY }
+//         });
+        
+//         const availableModels = response.data.models.filter(model => 
+//             model.supportedGenerationMethods?.includes('generateContent')
+//         );
+        
+//         res.json({
+//             apiKeyExists: !!process.env.GEMINI_API_KEY,
+//             availableModels: availableModels.map(m => ({
+//                 name: m.name,
+//                 displayName: m.displayName
+//             }))
+//         });
+//     } catch (error) {
+//         res.status(500).json({ 
+//             error: "Debug failed",
+//             details: error.response?.data || error.message 
+//         });
+//     }
+// });
 
 // Health route 
 app.get('/health', (req, res) => {
