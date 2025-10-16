@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DSA project</title>
+    <title>AlgoViz</title>
+    <link rel="icon" href="images/HomePageImages/logo2.png" type="image/png">
     <link rel="stylesheet" href="styles/nav.css">
     <link rel="stylesheet" href="styles/body.css">
     <link rel="stylesheet" href="styles/general.css">
@@ -28,7 +29,7 @@
                 </h1>
                 <p class="Visualize-paragraph">An interactive plateform to visualize, understand, and learn DSA concepts with AI-powered assistance. See algorithms in action and build intution through animation.</p>
                 <div class="start-view-buttons">
-                    <button class="start-exploring-button black-box-button" onclick="location.href='explore.html'">
+                    <button class="start-exploring-button black-box-button" id="startExploringBtn">
                         Start Exploring 
                         <svg xmlns="http://www.w3.org/2000/svg" class="button-arrow-black" viewBox="0 0 20 20" fill="currentColor">
                                 <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd"></path>
@@ -319,6 +320,7 @@
         <div id="footer"></div>
 
     </main>
+    <script src="scripts/nav.js"></script>
     <script type="module" src="scripts/main.js"></script>
     <script src="scripts/scroll-animations.js"></script>
     <script type="module">

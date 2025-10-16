@@ -31,7 +31,7 @@ export const modules = [{
         thirdTag:"Dijkstra"
     },
     category: "Data Structures",
-    image: "../images/ExplorePageImages/explore-tree.png",
+    image: "../images/ExplorePageImages/tree.png",
     link: "/treeTraversal.html"
   },
   {
@@ -43,7 +43,7 @@ export const modules = [{
         thirdTag:"Dequeue"
     },
     category: "Data Structures",
-    image: "../images/ExplorePageImages/explore-stack.png",
+    image: "../images/ExplorePageImages/stack.png",
     link: "#"
   },
   {

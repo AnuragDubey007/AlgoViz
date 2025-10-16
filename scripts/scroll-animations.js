@@ -1,5 +1,5 @@
-// Very simple scroll animation
-function simpleScrollAnimation() {
+
+function scrollAnimation() {
   const elements = document.querySelectorAll('.module1-view, .module2-view, .ai-assistant-section');
   
   elements.forEach(element => {
@@ -12,6 +12,6 @@ function simpleScrollAnimation() {
   });
 }
 
-// Run on load and scroll
-window.addEventListener('load', simpleScrollAnimation);
-window.addEventListener('scroll', simpleScrollAnimation);
+
+window.addEventListener('load', scrollAnimation);
+window.addEventListener('scroll', scrollAnimation);
