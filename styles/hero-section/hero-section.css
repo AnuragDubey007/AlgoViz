@@ -332,6 +332,24 @@
     border-radius: 8px;
 }
 
+@media (max-width: 768px) {
+    .module1-view-rightside{
+        display: none;
+    }
+    .module1-sorting-visualizer{
+        width: 70%;
+        padding-left: 1rem;
+    }
+    .module2-Pathfinding-Visualizer{
+        padding-left: 1rem;
+    }
+    .module1-view{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}
+
 .try-it-now-button{
     display: inline-flex;
     align-items: center;
@@ -355,7 +373,11 @@
 .module2-Pathfinding-Visualizer{
     padding-left: 3rem;
 }
-
+@media (max-width: 768px) {
+    .module2-Pathfinding-Visualizer{
+        padding-left: 1rem;
+    }
+}
 .view-all-modules-box{
     text-align: center;
     margin-top: 1rem;
