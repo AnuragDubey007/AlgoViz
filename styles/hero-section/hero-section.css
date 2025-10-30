@@ -1,4 +1,6 @@
-
+html, body {
+  overflow-x: hidden;
+}
 
 .black-box-button{
     color: white;
@@ -43,7 +45,7 @@
 
 .Intro-sorting-image{
     margin-top: 2rem;
-    max-width: 100%;
+    max-width: 90%;
 }
 
 
@@ -275,7 +277,8 @@
 
 /* module1 view */
 
-.module1-view{
+.module1-view,
+.module2-view{
     display: flex;
     gap: 2rem;
 }
@@ -343,7 +346,8 @@
     .module2-Pathfinding-Visualizer{
         padding-left: 1rem;
     }
-    .module1-view{
+    .module1-view,
+    .module2-view{
         display: flex;
         justify-content: center;
         align-items: center;
@@ -719,27 +723,22 @@
 
 
 
-/* hidden initial state */
 .module1-view, 
 .module2-view,
 .ai-assistant-section {
   opacity: 0;
-  transform: translateX(-100px); /* default left */
-  transition: all 0.8s ease-out;
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
 }
 
-/* pathfinding comes from right */
+/* Set initial positions in CSS, not JS */
+.module1-view { 
+  transform: translateX(-100px);
+}
+
 .module2-view {
   transform: translateX(100px);
 }
 
-/* ai assistant comes from bottom */
 .ai-assistant-section {
   transform: translateY(100px);
-}
-
-/* when active */
-.reveal {
-  opacity: 1;
-  transform: translate(0,0);
 }
