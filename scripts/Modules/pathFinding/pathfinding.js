@@ -284,7 +284,7 @@ const dropDownItems2 = document.querySelectorAll('.maze-content .dropdown-item')
 
             
 
-            if(selectedAlgorithm === 'Breadth-First-Search' || selectedAlgorithm === 'Depth-First-Search'){
+            if(selectedAlgorithm === 'Breadth-First Search' || selectedAlgorithm === 'Depth-First Search'){
                 addWeightBtn.disabled = true;
                 clearWeight();// BFS/DFS don’t support weights
                 if(currentTool === 'weight'){
@@ -516,7 +516,7 @@ visualizeBtn.addEventListener('click',async() => {
             await astar();
         }
     }
-    else if(selectedAlgorithm==="Breadth-First-Search"){
+    else if(selectedAlgorithm==="Breadth-First Search"){
         clearWeight();
         if (waypoint) {
             // Run first leg: start -> waypoint (this will animate traversal with 'visited-leg1')
@@ -567,7 +567,7 @@ visualizeBtn.addEventListener('click',async() => {
             await BFS();
         }
     }
-    else if(selectedAlgorithm==="Depth-First-Search"){
+    else if(selectedAlgorithm==="Depth-First Search"){
         clearWeight();
         if (waypoint) {
             const firstLegPath = await DFS(true, waypoint);

@@ -56,7 +56,7 @@ export const modules = [{
     },
     category: "Data Structures",
     image: "../images/ExplorePageImages/explore-linked-list.png",
-    link: "/linkedlist.html"
+    link: "/linkedList.html"
   },
   {
     title: "AI Assistant",
