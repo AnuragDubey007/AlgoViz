@@ -19,7 +19,8 @@ exports.handleAIRequest = async (req, res) => {
         //Old Model Gone (Bye Bye)
 
         //const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent'; // can be used if another not working
-        const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-001:generateContent'; 
+        // const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-001:generateContent'; 
+        const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent';
 
 
         
@@ -33,6 +34,12 @@ exports.handleAIRequest = async (req, res) => {
         return res.json({reply : aiReply});
     }
     catch(error){
+        if (error.response?.status === 429) {
+            console.error('QUOTA EXCEEDED (429): Check if billing is linked in AI Studio');
+            return res.status(429).json({ 
+                error: "The AI is currently at its daily limit. Please try again later." 
+            });
+        }
         console.error('AI error:', error.response?.data || error.message);
         res.status(500).json({ error: "Failed to fetch AI response" });
     }
